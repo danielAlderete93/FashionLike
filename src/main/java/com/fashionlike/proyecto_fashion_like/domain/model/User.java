@@ -1,6 +1,6 @@
-package com.fashionlike.proyecto_fashion_like.model;
+package com.fashionlike.proyecto_fashion_like.domain.model;
 
-import com.fashionlike.proyecto_fashion_like.model.role.Role;
+import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

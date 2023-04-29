@@ -1,6 +1,6 @@
-package com.fashionlike.proyecto_fashion_like.model.role;
+package com.fashionlike.proyecto_fashion_like.domain.model.role;
 
-import com.fashionlike.proyecto_fashion_like.model.ActionType;
+import com.fashionlike.proyecto_fashion_like.domain.model.ActionType;
 
 public class RoleAdmin extends Role {
     @Override

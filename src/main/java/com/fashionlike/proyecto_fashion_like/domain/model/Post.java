@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like.model;
+package com.fashionlike.proyecto_fashion_like.domain.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
