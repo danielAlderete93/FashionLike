@@ -1,8 +1,5 @@
-package com.fashionlike.proyecto_fashion_like.infra.adaptors.out.entity;
+package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
-import com.fashionlike.proyecto_fashion_like.domain.model.Post;
-import com.fashionlike.proyecto_fashion_like.domain.model.ReactionType;
-import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like.infra.adaptors.out.entity;
+package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
