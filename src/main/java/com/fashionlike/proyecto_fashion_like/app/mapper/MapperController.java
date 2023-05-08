@@ -8,4 +8,5 @@ public interface MapperController<T, D> {
 
     T toDTO(D domain);
 
+
 }

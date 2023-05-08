@@ -3,8 +3,6 @@ package com.fashionlike.proyecto_fashion_like.app.mapper;
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 
-import java.util.Map;
-
 public class UserMapperControllerImpl implements MapperController<UserDTO, User> {
     @Override
     public User toDomain(UserDTO dto) {
