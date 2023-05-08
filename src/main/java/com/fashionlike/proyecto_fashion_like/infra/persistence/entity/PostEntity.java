@@ -1,8 +1,7 @@
 package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -10,6 +9,9 @@ import java.util.List;
 @Entity(name = "posts")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter
+@Setter
 public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

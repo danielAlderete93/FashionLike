@@ -1,12 +1,14 @@
 package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity(name = "reactions")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@Getter
+@Setter
 public class ReactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like;
+package com.fashionlike.proyecto_fashion_like.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
