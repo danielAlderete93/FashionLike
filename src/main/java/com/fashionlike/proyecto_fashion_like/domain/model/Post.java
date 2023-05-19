@@ -5,9 +5,10 @@ import lombok.*;
 import java.util.Date;
 import java.util.List;
 
-@AllArgsConstructor
+
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Post {
@@ -19,8 +20,6 @@ public class Post {
     private Long views;
     private Boolean isActive;
     private List<Tag> tags;
-
-
 
 
 }

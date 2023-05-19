@@ -4,45 +4,44 @@ import com.fashionlike.proyecto_fashion_like.domain.model.Tag;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.TagRepository;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.TagEntity;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.mapper.MapperPersistence;
-import com.fashionlike.proyecto_fashion_like.infra.persistence.repository.TagRepositoryPersistence;
+import com.fashionlike.proyecto_fashion_like.infra.persistence.repository.TagRepositoryPersistenceJPA;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class TagRepositoryPersistenceImpl implements TagRepository {
-    private final TagRepositoryPersistence persistence;
-    private final MapperPersistence<TagEntity, Tag> mapperPersistence;
 
-    public TagRepositoryPersistenceImpl(TagRepositoryPersistence persistence, MapperPersistence<TagEntity, Tag> mapperPersistence) {
-        this.persistence = persistence;
-        this.mapperPersistence = mapperPersistence;
+@Repository
+public class TagRepositoryPersistenceImpl implements TagRepository {
+    private final TagRepositoryPersistenceJPA tagRepositoryPersistenceJPA;
+    private final MapperPersistence<TagEntity, Tag> tagMapperPersistence;
+
+    public TagRepositoryPersistenceImpl(TagRepositoryPersistenceJPA tagRepositoryPersistenceJPA, MapperPersistence<TagEntity, Tag> tagMapperPersistence) {
+        this.tagRepositoryPersistenceJPA = tagRepositoryPersistenceJPA;
+        this.tagMapperPersistence = tagMapperPersistence;
     }
 
     @Override
     public Tag findById(Long id) {
-        return persistence.findById(id)
-                .map(mapperPersistence::toDomain)
-                .orElse(null)
-                ;
+        return tagRepositoryPersistenceJPA.findById(id).map(tagMapperPersistence::toDomain).orElse(null);
     }
 
     @Override
     public List<Tag> findAll() {
-        return persistence.findAll().stream()
-                .map(mapperPersistence::toDomain)
-                .collect(Collectors.toList())
-                ;
+        return tagRepositoryPersistenceJPA.findAll().stream().map(tagMapperPersistence::toDomain).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public void save(Tag tag) {
-        TagEntity tagEntity = mapperPersistence.toEntity(tag);
-        persistence.save(tagEntity);
+        TagEntity tagEntity = tagMapperPersistence.toEntity(tag);
+        tagRepositoryPersistenceJPA.save(tagEntity);
     }
 
+    @Transactional
     @Override
     public void deleteById(Long id) {
-        persistence.deleteById(id);
+        tagRepositoryPersistenceJPA.deleteById(id);
     }
 }

@@ -1,23 +1,22 @@
 package com.fashionlike.proyecto_fashion_like.domain.usecase;
 
-import com.fashionlike.proyecto_fashion_like.domain.model.User;
+import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserUseCase {
-    Optional<User> getUserById(Long id);
+    UserDTO getUserById(Integer id);
 
-    List<User> getAllUsers();
-
-
-    void createUser(Long id, String name, String username, String password, Role role);
-
-    void updateUser(Long id, String name, String username, String password, Role role);
+    List<UserDTO> getAllUsers();
 
 
-    void deleteUserById(Long id);
+    Integer createUser(UserDTO user);
+
+    void updateUser(Integer id, UserDTO userDTO);
+
+
+    void deleteUserById(Integer id);
 
 
 }

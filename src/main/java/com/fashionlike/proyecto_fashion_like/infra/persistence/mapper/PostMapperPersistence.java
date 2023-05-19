@@ -4,13 +4,19 @@ import com.fashionlike.proyecto_fashion_like.domain.model.Post;
 import com.fashionlike.proyecto_fashion_like.domain.model.Tag;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.PostEntity;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.TagEntity;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PostMapper implements MapperPersistence<PostEntity, Post> {
+@Component
+@AllArgsConstructor
+@NoArgsConstructor
+public class PostMapperPersistence implements MapperPersistence<PostEntity, Post> {
+    private MapperPersistence<TagEntity, Tag> tagMapperPersistence;
 
-    MapperPersistence<TagEntity, Tag> tagMapperPersistence;
 
     @Override
     public Post toDomain(PostEntity entity) {

@@ -9,10 +9,10 @@ import lombok.*;
 @Setter
 @Builder
 public class User {
-    private Long id;
+    private Integer id;
     private String name;
     private String username;
     private String password;
     private Boolean isActive;
-    private Role rol;
+    private Role role;
 }

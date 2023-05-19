@@ -1,9 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.mapper;
 
-import org.springframework.stereotype.Component;
-
-@Component
-public interface MapperController<T, D> {
+public interface MapperController<D, T> {
     D toDomain(T dto);
 
     T toDTO(D domain);
