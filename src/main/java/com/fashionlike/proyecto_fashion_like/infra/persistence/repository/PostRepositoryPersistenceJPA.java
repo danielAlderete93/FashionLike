@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepositoryPersistenceJPA extends JpaRepository<PostEntity, Long> {
+public interface PostRepositoryPersistenceJPA extends JpaRepository<PostEntity, Integer> {
 }
