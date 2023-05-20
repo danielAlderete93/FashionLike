@@ -16,8 +16,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post getPostById(Long id) {
-        return postRepository.findById(id);
+    public Post getPostById(Integer id) {
+        return postRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -26,24 +26,32 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void createPost(Post post) {
-        postRepository.save(post);
+    public Integer createPost(Post post) {
+        return postRepository.save(post);
     }
 
     @Override
-    public void updatePost(Long id, Post post) {
-        Post postToEdit = postRepository.findById(id);
-        postToEdit.setImg(post.getImg());
-        postToEdit.setTags(post.getTags());
-        postToEdit.setDate(post.getDate());
-        postToEdit.setTitle(post.getTitle());
-        postToEdit.setDescription(post.getDescription());
-        postToEdit.setViews(post.getViews());
-        postRepository.save(postToEdit);
+    public void updatePost(Integer id, Post post) {
+        Post postToEdit = postRepository.findById(id).orElse(null);
+
+        if (postToEdit == null) {
+            postRepository.save(post);
+        } else {
+            postToEdit.setImg(post.getImg());
+            postToEdit.setTags(post.getTags());
+            postToEdit.setDate(post.getDate());
+            postToEdit.setTitle(post.getTitle());
+            postToEdit.setDescription(post.getDescription());
+            postToEdit.setViews(post.getViews());
+            postRepository.save(postToEdit);
+        }
+
+
     }
 
     @Override
-    public void deletePostById(Long id) {
-        postRepository.deleteById(id);
+    public Boolean deletePostById(Integer id) {
+
+        return postRepository.deleteById(id);
     }
 }

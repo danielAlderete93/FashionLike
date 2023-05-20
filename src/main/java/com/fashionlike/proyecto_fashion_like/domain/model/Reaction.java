@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @Builder
 public class Reaction {
-    private Long id;
+    private Integer id;
     private User user;
     private Post post;
     private ReactionType type;

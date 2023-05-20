@@ -1,22 +1,25 @@
 package com.fashionlike.proyecto_fashion_like.domain.model.role;
 
 import com.fashionlike.proyecto_fashion_like.domain.model.ActionType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Getter
+@Setter
 public abstract class Role {
     protected Integer id;
     protected List<ActionType> allowedActions;
-    protected String name;
 
+    protected Role() {
+    }
+
+    protected Role(Integer id, List<ActionType> allowedActions) {
+        this.id = id;
+        this.allowedActions = allowedActions;
+
+    }
 
     public void addAllowedAction(ActionType action) {
         this.allowedActions.add(action);

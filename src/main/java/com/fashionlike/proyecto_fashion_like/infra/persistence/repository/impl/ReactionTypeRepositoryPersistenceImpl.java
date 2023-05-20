@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository("reactionTypeRepositoryPersistenceImpl")
@@ -25,7 +26,7 @@ public class ReactionTypeRepositoryPersistenceImpl implements ReactionTypeReposi
     }
 
     @Override
-    public ReactionType findById(Long id) {
+    public Optional<ReactionType> findById(Long id) {
 
         return reactionTypeRepositoryPersistenceJPA.findById(id)
                 .map(reactionTypeMapperPersistence::toDomain)
@@ -35,17 +36,27 @@ public class ReactionTypeRepositoryPersistenceImpl implements ReactionTypeReposi
 
     @Override
     public List<ReactionType> findAll() {
-        return reactionTypeRepositoryPersistenceJPA.findAll().stream()
+        List<ReactionTypeEntity> entities = reactionTypeRepositoryPersistenceJPA.findAll();
+
+        return entities.stream()
                 .map(reactionTypeMapperPersistence::toDomain)
-                .collect(Collectors.toList())
-                ;
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public void save(ReactionType reactionType) {
-        ReactionTypeEntity entity = reactionTypeMapperPersistence.toEntity(reactionType);
-        reactionTypeRepositoryPersistenceJPA.save(entity);
+    public Integer save(ReactionType reactionType) {
+        Optional<ReactionTypeEntity> reactionTypeEntity = reactionTypeMapperPersistence.toEntity(reactionType);
+
+        if (reactionTypeEntity.isEmpty()) {
+            return null;
+        }
+
+        ReactionTypeEntity savedEntity = reactionTypeRepositoryPersistenceJPA.save(reactionTypeEntity.get());
+
+        return savedEntity.getId();
     }
 
     @Transactional

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository("reactionRepositoryImpl")
@@ -26,32 +27,40 @@ public class ReactionRepositoryImpl implements ReactionRepository {
     }
 
     @Override
-    public Reaction findById(Long id) {
-
+    public Optional<Reaction> findById(Long id) {
         return reactionRepositoryPersistenceJPA.findById(id)
-                .map(reactionMapperPersistence::toDomain)
-                .orElse(null)
-                ;
+                .flatMap(reactionMapperPersistence::toDomain);
     }
 
     @Override
     public List<Reaction> findAll() {
-        return reactionRepositoryPersistenceJPA.findAll().stream()
+        List<ReactionEntity> entities = reactionRepositoryPersistenceJPA.findAll();
+
+        return entities.stream()
                 .map(reactionMapperPersistence::toDomain)
-                .collect(Collectors.toList())
-                ;
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public void save(Reaction reaction) {
-        ReactionEntity reactionEntity = reactionMapperPersistence.toEntity(reaction);
-        reactionRepositoryPersistenceJPA.save(reactionEntity);
+    public Integer save(Reaction reaction) {
+        Optional<ReactionEntity> reactionEntity = reactionMapperPersistence.toEntity(reaction);
+
+        if (reactionEntity.isEmpty()) {
+            return null;
+        }
+
+        ReactionEntity savedEntity = reactionRepositoryPersistenceJPA.save(reactionEntity.get());
+
+        return savedEntity.getId();
     }
 
     @Transactional
     @Override
-    public void deleteById(Long id) {
+    public Boolean deleteById(Long id) {
         reactionRepositoryPersistenceJPA.deleteById(id);
+        return true;
     }
 }

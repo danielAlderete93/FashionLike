@@ -8,43 +8,49 @@ import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.RoleEntity
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.RoleStandardEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class RoleMapperPersistence implements MapperPersistence<RoleEntity, Role> {
     @Override
-    public Role toDomain(RoleEntity entity) {
+    public Optional<Role> toDomain(RoleEntity entity) {
+        if (entity == null) {
+            return Optional.empty();
+        }
+
         if (entity instanceof RoleStandardEntity) {
-            return RoleStandard.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .allowedActions(entity.getAllowedActions())
-                    .build();
+            return Optional.of(
+                    RoleStandard.builder()
+                            .id(entity.getId())
+                            .allowedActions(entity.getAllowedActions())
+                            .build());
         }
         if (entity instanceof RoleAdminEntity) {
-            return RoleAdmin.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .allowedActions(entity.getAllowedActions())
-                    .build();
+            return Optional.of(
+                    RoleAdmin.builder()
+                            .id(entity.getId())
+                            .allowedActions(entity.getAllowedActions())
+                            .build());
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public RoleEntity toEntity(Role domain) {
+    public Optional<RoleEntity> toEntity(Role domain) {
         if (domain instanceof RoleStandard) {
-            return RoleStandardEntity.builder()
-                    .id(domain.getId())
-                    .name(domain.getName())
-                    .allowedActions(domain.getAllowedActions())
-                    .build();
+            return Optional.of(
+                    RoleStandardEntity.builder()
+                            .id(domain.getId())
+                            .allowedActions(domain.getAllowedActions())
+                            .build());
         }
         if (domain instanceof RoleAdmin) {
-            return RoleAdminEntity.builder()
-                    .id(domain.getId())
-                    .name(domain.getName())
-                    .allowedActions(domain.getAllowedActions())
-                    .build();
+            return Optional.of(
+                    RoleAdminEntity.builder()
+                            .id(domain.getId())
+                            .allowedActions(domain.getAllowedActions())
+                            .build());
         }
-        return null;
+        return Optional.empty();
     }
 }

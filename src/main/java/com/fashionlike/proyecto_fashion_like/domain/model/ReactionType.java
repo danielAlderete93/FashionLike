@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class ReactionType {
-    private Long id;
+    private Integer id;
     private String name;
     private Character emoji;
 

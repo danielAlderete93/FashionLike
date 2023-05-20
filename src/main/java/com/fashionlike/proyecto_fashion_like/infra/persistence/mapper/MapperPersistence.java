@@ -1,9 +1,11 @@
 package com.fashionlike.proyecto_fashion_like.infra.persistence.mapper;
 
+import java.util.Optional;
+
 public interface MapperPersistence<E, D> {
 
-    D toDomain(E entity);
+    Optional<D> toDomain(E entity);
 
-    E toEntity(D domain);
+    Optional<E> toEntity(D domain);
 
 }

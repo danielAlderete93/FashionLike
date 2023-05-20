@@ -3,14 +3,15 @@ package com.fashionlike.proyecto_fashion_like.domain.port.repository;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface UserRepository {
-    User findById(Integer id);
+    Optional<User> findById(Integer id);
 
     List<User> findAll();
 
     Integer save(User user);
 
-    void deleteById(Integer id);
+    Boolean deleteById(Integer id);
 }

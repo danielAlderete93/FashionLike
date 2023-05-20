@@ -13,7 +13,7 @@ public class ReactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", unique = true, nullable = false)
-    private Long id;
+    private Integer id;
     @ManyToOne
     private UserEntity user;
     @ManyToOne

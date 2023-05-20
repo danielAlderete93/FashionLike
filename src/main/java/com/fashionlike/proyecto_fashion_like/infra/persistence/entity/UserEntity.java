@@ -22,9 +22,7 @@ public class UserEntity {
     private String password;
     @Column
     private Boolean isActive;
+    @ManyToOne
+    private RoleEntity role;
 
-    /*
-    @Transient
-    private Role rol;
-     */
 }

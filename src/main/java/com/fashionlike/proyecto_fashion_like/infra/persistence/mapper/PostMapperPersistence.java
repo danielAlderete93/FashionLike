@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -19,12 +20,19 @@ public class PostMapperPersistence implements MapperPersistence<PostEntity, Post
 
 
     @Override
-    public Post toDomain(PostEntity entity) {
+    public Optional<Post> toDomain(PostEntity entity) {
+        Post post;
         List<Tag> tagList;
+        if (entity == null) {
+            return Optional.empty();
+        }
+        tagList = entity.getTags().stream()
+                .map(tagMapperPersistence::toDomain)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
 
-        tagList = entity.getTags().stream().map(tagEntity -> tagMapperPersistence.toDomain(tagEntity)).collect(Collectors.toList());
-
-        return Post.builder()
+        post = Post.builder()
                 .id(entity.getId())
                 .date(entity.getDate())
                 .description(entity.getDescription())
@@ -34,15 +42,25 @@ public class PostMapperPersistence implements MapperPersistence<PostEntity, Post
                 .tags(tagList)
                 .isActive(entity.getIsActive())
                 .build();
+
+        return Optional.of(post);
     }
 
     @Override
-    public PostEntity toEntity(Post domain) {
+    public Optional<PostEntity> toEntity(Post domain) {
         List<TagEntity> tagEntities;
+        PostEntity postEntity;
+        if (domain == null) {
+            return Optional.empty();
+        }
 
-        tagEntities = domain.getTags().stream().map(tag -> tagMapperPersistence.toEntity(tag)).collect(Collectors.toList());
+        tagEntities = domain.getTags().stream()
+                .map(tagMapperPersistence::toEntity)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
 
-        return PostEntity.builder()
+        postEntity = PostEntity.builder()
                 .id(domain.getId())
                 .date(domain.getDate())
                 .description(domain.getDescription())
@@ -52,5 +70,7 @@ public class PostMapperPersistence implements MapperPersistence<PostEntity, Post
                 .tags(tagEntities)
                 .isActive(domain.getIsActive())
                 .build();
+
+        return Optional.of(postEntity);
     }
 }

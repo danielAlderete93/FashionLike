@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 
 @Component
 @AllArgsConstructor
@@ -24,21 +26,56 @@ public class ReactionMapperPersistence implements MapperPersistence<ReactionEnti
 
 
     @Override
-    public Reaction toDomain(ReactionEntity entity) {
-        User user = userMapperPersistence.toDomain(entity.getUser());
-        Post post = postMapperPersistence.toDomain(entity.getPost());
-        ReactionType type = reactionTypeMapperPersistence.toDomain(entity.getType());
+    public Optional<Reaction> toDomain(ReactionEntity entity) {
+        User user;
+        Post post;
+        ReactionType type;
+        Reaction reaction;
 
+        if (entity == null) {
+            return Optional.empty();
+        }
+        user = userMapperPersistence.toDomain(entity.getUser())
+                .orElse(null);
+        post = postMapperPersistence.toDomain(entity.getPost())
+                .orElse(null);
+        type = reactionTypeMapperPersistence.toDomain(entity.getType())
+                .orElse(null);
 
-        return Reaction.builder().id(entity.getId()).post(post).type(type).user(user).build();
+        reaction = Reaction.builder()
+                .id(entity.getId())
+                .post(post)
+                .type(type)
+                .user(user)
+                .build();
+
+        return Optional.of(reaction);
     }
 
     @Override
-    public ReactionEntity toEntity(Reaction domain) {
-        UserEntity userEntity = userMapperPersistence.toEntity(domain.getUser());
-        PostEntity postEntity = postMapperPersistence.toEntity(domain.getPost());
-        ReactionTypeEntity typeEntity = reactionTypeMapperPersistence.toEntity(domain.getType());
+    public Optional<ReactionEntity> toEntity(Reaction domain) {
+        UserEntity userEntity;
+        PostEntity postEntity;
+        ReactionTypeEntity typeEntity;
+        ReactionEntity entity;
 
-        return ReactionEntity.builder().id(domain.getId()).post(postEntity).type(typeEntity).user(userEntity).build();
+        if (domain == null) {
+            return Optional.empty();
+        }
+        userEntity = userMapperPersistence.toEntity(domain.getUser())
+                .orElse(null);
+        postEntity = postMapperPersistence.toEntity(domain.getPost())
+                .orElse(null);
+        typeEntity = reactionTypeMapperPersistence.toEntity(domain.getType())
+                .orElse(null);
+
+        entity = ReactionEntity.builder()
+                .id(domain.getId())
+                .post(postEntity)
+                .type(typeEntity)
+                .user(userEntity)
+                .build();
+
+        return Optional.of(entity);
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -26,25 +27,40 @@ public class PostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public Post findById(Long id) {
-        return persistence.findById(id).map(mapperPersistence::toDomain).orElse(null);
+    public Optional<Post> findById(Integer id) {
+        return persistence.findById(id)
+                .flatMap(mapperPersistence::toDomain);
     }
 
     @Override
     public List<Post> findAll() {
-        return persistence.findAll().stream().map(mapperPersistence::toDomain).collect(Collectors.toList());
+        List<PostEntity> entities = persistence.findAll();
+
+        return entities.stream()
+                .map(mapperPersistence::toDomain)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public void save(Post post) {
-        PostEntity entity = mapperPersistence.toEntity(post);
-        persistence.save(entity);
+    public Integer save(Post post) {
+        Optional<PostEntity> postEntity = mapperPersistence.toEntity(post);
+
+        if (postEntity.isEmpty()) {
+            return null;
+        }
+
+        PostEntity savedEntity = persistence.save(postEntity.get());
+
+        return savedEntity.getId();
     }
 
     @Transactional
     @Override
-    public void deleteById(Long id) {
+    public Boolean deleteById(Integer id) {
         persistence.deleteById(id);
+        return true;
     }
 }

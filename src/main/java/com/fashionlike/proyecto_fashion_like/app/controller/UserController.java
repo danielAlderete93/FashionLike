@@ -2,6 +2,11 @@ package com.fashionlike.proyecto_fashion_like.app.controller;
 
 
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
+import com.fashionlike.proyecto_fashion_like.app.mapper.MapperController;
+import com.fashionlike.proyecto_fashion_like.domain.model.ActionType;
+import com.fashionlike.proyecto_fashion_like.domain.model.User;
+import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
+import com.fashionlike.proyecto_fashion_like.domain.model.role.RoleAdmin;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.UserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,6 +25,7 @@ import java.util.List;
 public class UserController {
 
     private final UserUseCase userUseCase;
+    private final MapperController<User, UserDTO> mapperController;
 
 
     @GetMapping("{id}")
@@ -32,6 +39,7 @@ public class UserController {
             return ResponseEntity.ok(userDTO);
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -47,6 +55,7 @@ public class UserController {
             return ResponseEntity.ok(userDTO);
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -54,21 +63,23 @@ public class UserController {
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-
         try {
-            /*TODO: ROLE*/
             Integer userId = userUseCase.createUser(userDTO);
             if (userId == null) {
-                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                return ResponseEntity.badRequest().build();
             }
+
+            UserDTO createdUserDTO = userUseCase.getUserById(userId);
+
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(userId)
                     .toUri();
 
-            return ResponseEntity.created(location).body(userDTO);
-
+            return ResponseEntity.created(location).body(createdUserDTO);
         } catch (Exception e) {
+            // Handle other specific exception
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -76,11 +87,11 @@ public class UserController {
     @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> createUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
         try {
-            /*TODO: ROLE*/
             userUseCase.updateUser(id, userDTO);
             return ResponseEntity.ok(userDTO);
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -94,6 +105,34 @@ public class UserController {
             return ResponseEntity.ok(userDTO);
 
         } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping(value = "/admin")
+    public ResponseEntity<UserDTO> prueba() {
+        try {
+            List<ActionType> actionTypes = new ArrayList<>();
+            actionTypes.add(ActionType.VIEW_POST);
+
+            Role role = RoleAdmin.builder()
+                    .id(null)
+                    .allowedActions(actionTypes)
+                    .build();
+            User user = User.builder()
+                    .name("pepe")
+                    .username("pepe")
+                    .password("pepe")
+                    .role(role)
+                    .isActive(true)
+                    .build();
+
+
+            return ResponseEntity.ok(mapperController.toDTO(user));
+
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

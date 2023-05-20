@@ -4,49 +4,57 @@ import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.UserRepository;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.UserEntity;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.mapper.MapperPersistence;
-import com.fashionlike.proyecto_fashion_like.infra.persistence.mapper.UserMapperPersistence;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.repository.UserRepositoryPersistenceJPA;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
+@AllArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
     private final UserRepositoryPersistenceJPA userRepositoryPersistenceJPA;
     private final MapperPersistence<UserEntity, User> userMapperPersistence;
 
-    public UserRepositoryImpl(UserRepositoryPersistenceJPA userRepositoryPersistenceJPA) {
-        this.userRepositoryPersistenceJPA = userRepositoryPersistenceJPA;
-        this.userMapperPersistence = new UserMapperPersistence();
-    }
 
 
     @Override
-    public User findById(Integer id) {
+    public Optional<User> findById(Integer id) {
         return userRepositoryPersistenceJPA.findById(id)
-                .map(userMapperPersistence::toDomain)
-                .orElse(null)
-                ;
+                .flatMap(userMapperPersistence::toDomain);
+
     }
 
     @Override
     public List<User> findAll() {
-        return userRepositoryPersistenceJPA.findAll().stream()
+        List<UserEntity> entities = userRepositoryPersistenceJPA.findAll();
+
+        return entities.stream()
                 .map(userMapperPersistence::toDomain)
-                .collect(Collectors.toList())
-                ;
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Integer save(User user) {
-        UserEntity userEntity = userMapperPersistence.toEntity(user);
-        return userRepositoryPersistenceJPA.save(userEntity).getId();
+        Optional<UserEntity> userEntity = userMapperPersistence.toEntity(user);
+
+        if (userEntity.isEmpty()) {
+            return null;
+        }
+
+        UserEntity savedEntity = userRepositoryPersistenceJPA.save(userEntity.get());
+
+        return savedEntity.getId();
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public Boolean deleteById(Integer id) {
         userRepositoryPersistenceJPA.deleteById(id);
+        return true;
     }
 }

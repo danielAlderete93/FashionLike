@@ -1,8 +1,10 @@
 package com.fashionlike.proyecto_fashion_like.app.usecase;
 
+import com.fashionlike.proyecto_fashion_like.app.dto.RoleDTO;
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.app.mapper.MapperController;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
+import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.UserService;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.UserUseCase;
 import lombok.AllArgsConstructor;
@@ -15,20 +17,21 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserUseCaseImpl implements UserUseCase {
     private final UserService userService;
-    private final MapperController<User, UserDTO> mapperController;
+    private final MapperController<Role, RoleDTO> roleMapperController;
+    private final MapperController<User, UserDTO> userMapperController;
 
 
     @Override
     public UserDTO getUserById(Integer id) {
         User user = userService.getUserById(id);
-        return mapperController.toDTO(user);
+        return userMapperController.toDTO(user);
     }
 
     @Override
     public List<UserDTO> getAllUsers() {
         List<User> users = userService.getUsers();
         return users.stream()
-                .map(mapperController::toDTO)
+                .map(userMapperController::toDTO)
                 .collect(Collectors.toList())
                 ;
     }
@@ -36,13 +39,16 @@ public class UserUseCaseImpl implements UserUseCase {
     @Override
     public Integer createUser(UserDTO userDTO) {
         User user;
-        /*TODO: Aqui Validadar contraseña y validador de username*/
+        Role role;
+
+        role = roleMapperController.toDomain(userDTO.getRole());
+
         user = User.builder()
                 .name(userDTO.getName())
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
                 .isActive(true)
-                .role(null)
+                .role(role)
                 .build();
 
         return userService.createUser(user);
@@ -51,12 +57,13 @@ public class UserUseCaseImpl implements UserUseCase {
     @Override
     public void updateUser(Integer id, UserDTO userDTO) {
         User user;
-
+        Role role;
+        role = roleMapperController.toDomain(userDTO.getRole());
         user = User.builder()
                 .name(userDTO.getName())
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
-                .role(null)/*TODO: ojota*/
+                .role(role)
                 .build();
 
         userService.updateUser(id, user);

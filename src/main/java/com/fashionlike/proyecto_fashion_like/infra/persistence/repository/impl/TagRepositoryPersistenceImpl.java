@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -23,25 +24,40 @@ public class TagRepositoryPersistenceImpl implements TagRepository {
     }
 
     @Override
-    public Tag findById(Long id) {
-        return tagRepositoryPersistenceJPA.findById(id).map(tagMapperPersistence::toDomain).orElse(null);
+    public Optional<Tag> findById(Long id) {
+        return tagRepositoryPersistenceJPA.findById(id)
+                .flatMap(tagMapperPersistence::toDomain);
     }
 
     @Override
     public List<Tag> findAll() {
-        return tagRepositoryPersistenceJPA.findAll().stream().map(tagMapperPersistence::toDomain).collect(Collectors.toList());
+        List<TagEntity> entities = tagRepositoryPersistenceJPA.findAll();
+
+        return entities.stream()
+                .map(tagMapperPersistence::toDomain)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public void save(Tag tag) {
-        TagEntity tagEntity = tagMapperPersistence.toEntity(tag);
-        tagRepositoryPersistenceJPA.save(tagEntity);
+    public Integer save(Tag tag) {
+        Optional<TagEntity> tagEntity = tagMapperPersistence.toEntity(tag);
+
+        if (tagEntity.isEmpty()) {
+            return null;
+        }
+
+        TagEntity savedEntity = tagRepositoryPersistenceJPA.save(tagEntity.get());
+
+        return savedEntity.getId();
     }
 
     @Transactional
     @Override
-    public void deleteById(Long id) {
+    public Boolean deleteById(Long id) {
         tagRepositoryPersistenceJPA.deleteById(id);
+        return true;
     }
 }

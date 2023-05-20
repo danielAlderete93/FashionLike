@@ -16,7 +16,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role getRoleById(Integer id) {
 
-        return roleRepository.findById(id);
+        return roleRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -31,9 +31,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void updateRole(Integer id, Role role) {
-        Role roleToEdit = roleRepository.findById(id);
-        roleToEdit.setAllowedActions(role.getAllowedActions());
+        roleRepository.findById(id)
+                .ifPresent(roleToEdit -> roleToEdit.setAllowedActions(role.getAllowedActions()));
+
         roleRepository.save(role);
+
     }
 
     @Override

@@ -1,31 +1,59 @@
 package com.fashionlike.proyecto_fashion_like.infra.persistence.mapper;
 
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
-import com.fashionlike.proyecto_fashion_like.domain.model.role.RoleAdmin;
+import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
+import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.RoleEntity;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.UserEntity;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
-@NoArgsConstructor
+@AllArgsConstructor
 public class UserMapperPersistence implements MapperPersistence<UserEntity, User> {
+
+    private final MapperPersistence<RoleEntity, Role> roleMapperPersistence;
+
+
     @Override
-    public User toDomain(UserEntity entity) {
-        return User.builder().id(entity.getId())
+    public Optional<User> toDomain(UserEntity entity) {
+        Role role;
+        User user;
+        if (entity == null) {
+            return Optional.empty();
+        }
+
+
+        role = roleMapperPersistence.toDomain(entity.getRole()).orElse(null);
+        user = User.builder().id(entity.getId())
                 .username(entity.getUsername())
                 .password(entity.getPassword())
                 .name(entity.getPassword())
-                .role(new RoleAdmin()) //TODO: Ojo!
+                .role(role)
                 .build();
+
+        return Optional.of(user);
     }
 
     @Override
-    public UserEntity toEntity(User domain) {
-        return UserEntity.builder().id(domain.getId())
+    public Optional<UserEntity> toEntity(User domain) {
+        RoleEntity role;
+        UserEntity userEntity;
+
+        if (domain == null) {
+            return Optional.empty();
+        }
+        role = roleMapperPersistence.toEntity(domain.getRole())
+                .orElse(null);
+
+        userEntity = UserEntity.builder().id(domain.getId())
                 .username(domain.getUsername())
                 .password(domain.getPassword())
                 .name(domain.getPassword())
-                //.rol(new RoleAdmin()) //TODO: Ojo!
+                .role(role)
                 .build();
+
+        return Optional.of(userEntity);
     }
 }

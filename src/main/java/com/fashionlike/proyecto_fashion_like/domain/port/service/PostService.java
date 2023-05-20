@@ -5,13 +5,13 @@ import com.fashionlike.proyecto_fashion_like.domain.model.Post;
 import java.util.List;
 
 public interface PostService {
-    Post getPostById(Long id);
+    Post getPostById(Integer id);
 
     List<Post> getAllPosts();
 
-    void createPost(Post post);
+    Integer createPost(Post post);
 
-    void updatePost(Long id, Post post);
+    void updatePost(Integer id, Post post);
 
-    void deletePostById(Long id);
+    Boolean deletePostById(Integer id);
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository("roleRepositoryImpl")
@@ -24,7 +25,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Role findById(Integer id) {
+    public Optional<Role> findById(Integer id) {
         return roleRespositoryPersistenceJPA.findById(id)
                 .map(roleMapperPersistence::toDomain)
                 .orElse(null)
@@ -33,21 +34,31 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public List<Role> findAll() {
-        return roleRespositoryPersistenceJPA.findAll()
-                .stream()
+
+        return roleRespositoryPersistenceJPA.findAll().stream()
                 .map(roleMapperPersistence::toDomain)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
     @Override
     public Integer save(Role role) {
-        RoleEntity entity = roleMapperPersistence.toEntity(role);
-        return roleRespositoryPersistenceJPA.save(entity).getId();
+        Optional<RoleEntity> roleEntity = roleMapperPersistence.toEntity(role);
+
+        if (roleEntity.isEmpty()) {
+            return null;
+        }
+
+        RoleEntity savedEntity = roleRespositoryPersistenceJPA.save(roleEntity.get());
+
+        return savedEntity.getId();
 
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public Boolean deleteById(Integer id) {
         roleRespositoryPersistenceJPA.deleteById(id);
+        return true;
     }
 }

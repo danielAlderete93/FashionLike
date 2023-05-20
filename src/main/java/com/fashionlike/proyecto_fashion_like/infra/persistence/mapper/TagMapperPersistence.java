@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -13,21 +14,47 @@ import java.util.stream.Collectors;
 public class TagMapperPersistence implements MapperPersistence<TagEntity, Tag> {
 
     @Override
-    public Tag toDomain(TagEntity entity) {
+    public Optional<Tag> toDomain(TagEntity entity) {
+        Tag tag;
         List<Tag> subTags;
+        if (entity == null) {
+            return Optional.empty();
+        }
 
-        subTags = entity.getTags().stream().map(this::toDomain).collect(Collectors.toList());
+         subTags = entity.getTags().stream()
+                .map(this::toDomain)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
 
-        return Tag.builder().id(entity.getId()).name(entity.getName()).tags(subTags).build();
-
+        tag = Tag.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .tags(subTags)
+                .build();
+        return Optional.of(tag);
     }
 
     @Override
-    public TagEntity toEntity(Tag domain) {
+    public Optional<TagEntity> toEntity(Tag domain) {
+        TagEntity tagEntity;
         List<TagEntity> subTags;
 
-        subTags = domain.getTags().stream().map(this::toEntity).collect(Collectors.toList());
+        if(domain == null){
+            return Optional.empty();
+        }
 
-        return TagEntity.builder().id(domain.getId()).name(domain.getName()).tags(subTags).build();
+        subTags = domain.getTags().stream()
+                .map(this::toEntity)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        tagEntity = TagEntity.builder()
+                .id(domain.getId())
+                .name(domain.getName())
+                .tags(subTags)
+                .build();
+        return Optional.of(tagEntity);
     }
 }

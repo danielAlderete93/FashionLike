@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Post {
-    private Long id;
+    private Integer id;
     private String title;
     private String img;
     private String description;
