@@ -45,7 +45,6 @@ public class RoleRepositoryImpl implements RoleRepository {
     @Override
     public Integer save(Role role) {
         Optional<RoleEntity> roleEntity = roleMapperPersistence.toEntity(role);
-
         if (roleEntity.isEmpty()) {
             return null;
         }

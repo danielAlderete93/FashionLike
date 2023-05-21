@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
         Role savedRole;
 
         Integer idRole = roleService.createRole(user.getRole());
+
         savedRole = roleService.getRoleById(idRole);
 
         user.setRole(savedRole);

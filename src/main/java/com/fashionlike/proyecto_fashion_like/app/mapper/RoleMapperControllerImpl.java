@@ -29,13 +29,24 @@ public class RoleMapperControllerImpl implements MapperController<Role, RoleDTO>
 
     @Override
     public RoleDTO toDTO(Role domain) {
-        if (domain != null) {
-            return RoleDTO.builder()
-                    .id(domain.getId())
-                    .allowedActions(domain.getAllowedActions())
-                    .build();
+        RoleDTO roleDTO;
+        if (domain == null) {
+            return null;
         }
-        return null;
+        roleDTO = RoleDTO.builder()
+                .id(domain.getId())
+                .allowedActions(domain.getAllowedActions())
+                .build();
+
+        if (domain instanceof RoleAdmin) {
+            roleDTO.setName("admin");
+        }
+        if (domain instanceof RoleStandard) {
+            roleDTO.setName("standard");
+        }
+
+        return roleDTO;
+
     }
 
     private boolean isAdmin(RoleDTO dto) {

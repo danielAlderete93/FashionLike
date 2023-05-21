@@ -2,11 +2,8 @@ package com.fashionlike.proyecto_fashion_like.app.controller;
 
 
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
-import com.fashionlike.proyecto_fashion_like.app.mapper.MapperController;
-import com.fashionlike.proyecto_fashion_like.domain.model.ActionType;
-import com.fashionlike.proyecto_fashion_like.domain.model.User;
-import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
-import com.fashionlike.proyecto_fashion_like.domain.model.role.RoleAdmin;
+import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
+import com.fashionlike.proyecto_fashion_like.app.factories.ApiResponseBuilder;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.UserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -25,7 +21,7 @@ import java.util.List;
 public class UserController {
 
     private final UserUseCase userUseCase;
-    private final MapperController<User, UserDTO> mapperController;
+    private final ApiResponseBuilder<UserDTO> apiResponseBuilder;
 
 
     @GetMapping("{id}")
@@ -62,25 +58,26 @@ public class UserController {
 
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<ApiResponse<UserDTO>> createUser(@RequestBody UserDTO userDTO) {
+        UserDTO createdUserDTO;
+        URI location;
         try {
             Integer userId = userUseCase.createUser(userDTO);
             if (userId == null) {
-                return ResponseEntity.badRequest().build();
+                return apiResponseBuilder.createErrorResponse();
             }
 
-            UserDTO createdUserDTO = userUseCase.getUserById(userId);
+            createdUserDTO = userUseCase.getUserById(userId);
 
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
                     .buildAndExpand(userId)
                     .toUri();
 
-            return ResponseEntity.created(location).body(createdUserDTO);
+            return apiResponseBuilder.createSuccessResponse(location, createdUserDTO);
         } catch (Exception e) {
-            // Handle other specific exception
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return apiResponseBuilder.errorServer(e.getMessage());
         }
     }
 
@@ -110,31 +107,5 @@ public class UserController {
         }
     }
 
-    @DeleteMapping(value = "/admin")
-    public ResponseEntity<UserDTO> prueba() {
-        try {
-            List<ActionType> actionTypes = new ArrayList<>();
-            actionTypes.add(ActionType.VIEW_POST);
-
-            Role role = RoleAdmin.builder()
-                    .id(null)
-                    .allowedActions(actionTypes)
-                    .build();
-            User user = User.builder()
-                    .name("pepe")
-                    .username("pepe")
-                    .password("pepe")
-                    .role(role)
-                    .isActive(true)
-                    .build();
-
-
-            return ResponseEntity.ok(mapperController.toDTO(user));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
 }
