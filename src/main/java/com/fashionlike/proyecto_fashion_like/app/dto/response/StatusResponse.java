@@ -13,19 +13,27 @@ public class StatusResponse {
     private int code;
 
     public static StatusResponse errorServer(String message) {
-        return new StatusResponse("Error", message, 500);
+        return new StatusResponse("Error: Internal Server", message, 500);
     }
 
     public static StatusResponse notFound(String message) {
-        return new StatusResponse("Error", message, 404);
+        return new StatusResponse("Error: Not found", message, 404);
     }
 
     public static StatusResponse notCreated(String message) {
-        return new StatusResponse("Error", message, 400);
+        return new StatusResponse("Error: Not created", message, 400);
     }
 
     public static StatusResponse created(String message) {
-        return new StatusResponse("Success", message, 201);
+        return new StatusResponse("Success: Created", message, 201);
+    }
+
+    public static StatusResponse updated(String message) {
+        return new StatusResponse("Success: Updated", message, 200);
+    }
+
+    public static StatusResponse deleted(String message) {
+        return new StatusResponse("Success: Delete", message, 200);
     }
 
     public static StatusResponse found(String message) {

@@ -29,7 +29,8 @@ public class UserMapperPersistence implements MapperPersistence<UserEntity, User
         user = User.builder().id(entity.getId())
                 .username(entity.getUsername())
                 .password(entity.getPassword())
-                .name(entity.getPassword())
+                .name(entity.getName())
+                .isActive(entity.getIsActive())
                 .role(role)
                 .build();
 
@@ -50,7 +51,8 @@ public class UserMapperPersistence implements MapperPersistence<UserEntity, User
         userEntity = UserEntity.builder().id(domain.getId())
                 .username(domain.getUsername())
                 .password(domain.getPassword())
-                .name(domain.getPassword())
+                .name(domain.getName())
+                .isActive(domain.getIsActive())
                 .role(role)
                 .build();
 

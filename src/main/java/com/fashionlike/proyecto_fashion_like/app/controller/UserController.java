@@ -4,9 +4,9 @@ package com.fashionlike.proyecto_fashion_like.app.controller;
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
 import com.fashionlike.proyecto_fashion_like.app.factories.ApiResponseBuilder;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.UserDomainException;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.UserUseCase;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,33 +26,33 @@ public class UserController {
 
     @GetMapping("{id}")
     @ResponseBody
-    public ResponseEntity<UserDTO> getUserByID(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<UserDTO>> getUserByID(@PathVariable Integer id) {
         try {
             UserDTO userDTO = userUseCase.getUserById(id);
             if (userDTO == null) {
-                return ResponseEntity.notFound().build();
+                return apiResponseBuilder.notFoundSuccessResponse();
             }
-            return ResponseEntity.ok(userDTO);
+            return apiResponseBuilder.foundSuccessResponse(userDTO);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return apiResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 
     @GetMapping("/all")
     @ResponseBody
-    public ResponseEntity<List<UserDTO>> getAllUser() {
+    public ResponseEntity<ApiResponse<List<UserDTO>>> getAllUser() {
         try {
             List<UserDTO> userDTO = userUseCase.getAllUsers();
-            if (userDTO == null) {
-                return ResponseEntity.notFound().build();
+            if (userDTO.isEmpty()) {
+                return apiResponseBuilder.notFoundListSuccessResponse();
             }
-            return ResponseEntity.ok(userDTO);
+            return apiResponseBuilder.foundListSuccessResponse(userDTO);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return apiResponseBuilder.errorServerListResponse(e.getMessage());
         }
     }
 
@@ -63,10 +63,6 @@ public class UserController {
         URI location;
         try {
             Integer userId = userUseCase.createUser(userDTO);
-            if (userId == null) {
-                return apiResponseBuilder.createErrorResponse();
-            }
-
             createdUserDTO = userUseCase.getUserById(userId);
 
             location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -75,35 +71,40 @@ public class UserController {
                     .toUri();
 
             return apiResponseBuilder.createSuccessResponse(location, createdUserDTO);
+        } catch (UserDomainException e) {
+            return apiResponseBuilder.createErrorResponse(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            return apiResponseBuilder.errorServer(e.getMessage());
+            return apiResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 
-    @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
+    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ApiResponse<UserDTO>> updateUser(@PathVariable Integer id, @RequestBody UserDTO userDTO) {
+        UserDTO userUpdated;
         try {
+
             userUseCase.updateUser(id, userDTO);
-            return ResponseEntity.ok(userDTO);
+            userUpdated = userUseCase.getUserById(id);
+            return apiResponseBuilder.updateSuccessResponse(userUpdated);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return apiResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<UserDTO> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<UserDTO>> deleteUser(@PathVariable Integer id) {
         try {
             UserDTO userDTO = userUseCase.getUserById(id);
             userUseCase.deleteUserById(id);
 
-            return ResponseEntity.ok(userDTO);
+            return apiResponseBuilder.deleteSuccessResponse(userDTO);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return apiResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 

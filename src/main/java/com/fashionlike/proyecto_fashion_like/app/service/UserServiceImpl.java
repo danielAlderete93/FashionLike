@@ -1,10 +1,13 @@
 package com.fashionlike.proyecto_fashion_like.app.service;
 
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.UserDomainException;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.UserRepository;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.RoleService;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.UserService;
+import com.fashionlike.proyecto_fashion_like.domain.validators.authentication.AuthenticationValidator;
+import com.fashionlike.proyecto_fashion_like.domain.validators.authentication.PasswordValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final AuthenticationValidator authenticationValidator;
+    private final PasswordValidator passwordValidator;
 
 
     @Override
@@ -29,8 +34,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer createUser(User user) {
+    public Integer createUser(User user) throws UserDomainException {
         Role savedRole;
+
+        authenticationValidator.validate(user);
 
         Integer idRole = roleService.createRole(user.getRole());
 
@@ -41,15 +48,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Integer id, User user) {
+    public void updateUser(Integer id, User user) throws UserDomainException {
         User userToEdit = userRepository.findById(id).orElse(null);
+
         if (userToEdit == null) {
-            userRepository.save(user);
+            createUser(user);
         } else {
+            passwordValidator.validate(user);
             userToEdit.setName(user.getName());
-            userToEdit.setPassword(userToEdit.getPassword());
-            userToEdit.setUsername(user.getUsername());
-            userToEdit.setRole(user.getRole());
+            userToEdit.setPassword(user.getPassword());
+            userToEdit.setIsActive(user.getIsActive());
             userRepository.save(userToEdit);
         }
 

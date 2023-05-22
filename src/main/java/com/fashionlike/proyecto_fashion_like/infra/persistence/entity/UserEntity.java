@@ -14,11 +14,11 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", unique = true, nullable = false)
     private Integer id;
-    @Column
+    @Column(nullable = false)
     private String name;
-    @Column
+    @Column(unique = true, nullable = false)
     private String username;
-    @Column
+    @Column(nullable = false)
     private String password;
     @Column
     private Boolean isActive;

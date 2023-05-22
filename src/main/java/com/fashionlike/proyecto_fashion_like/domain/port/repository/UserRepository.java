@@ -14,4 +14,6 @@ public interface UserRepository {
     Integer save(User user);
 
     Boolean deleteById(Integer id);
+
+    boolean existsByUsername(String username);
 }

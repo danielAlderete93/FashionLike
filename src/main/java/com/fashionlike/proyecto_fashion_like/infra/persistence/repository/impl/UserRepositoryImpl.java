@@ -20,7 +20,6 @@ public class UserRepositoryImpl implements UserRepository {
     private final MapperPersistence<UserEntity, User> userMapperPersistence;
 
 
-
     @Override
     public Optional<User> findById(Integer id) {
         return userRepositoryPersistenceJPA.findById(id)
@@ -57,4 +56,10 @@ public class UserRepositoryImpl implements UserRepository {
         userRepositoryPersistenceJPA.deleteById(id);
         return true;
     }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepositoryPersistenceJPA.existsUsername(username);
+    }
+
 }

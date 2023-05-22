@@ -25,6 +25,7 @@ public class UserMapperControllerImpl implements MapperController<User, UserDTO>
                 .password(dto.getPassword())
                 .name(dto.getName())
                 .username(dto.getUsername())
+                .isActive(dto.getIsActive())
                 .role(role)
                 .build();
 
@@ -42,6 +43,7 @@ public class UserMapperControllerImpl implements MapperController<User, UserDTO>
                 .username(domain.getUsername())
                 .password(domain.getPassword())
                 .name(domain.getName())
+                .isActive(domain.getIsActive())
                 .role(role)
                 .build();
     }

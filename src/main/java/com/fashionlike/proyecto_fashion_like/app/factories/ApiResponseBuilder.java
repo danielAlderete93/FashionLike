@@ -4,12 +4,28 @@ import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;
+import java.util.List;
 
 public interface ApiResponseBuilder<T> {
 
     ResponseEntity<ApiResponse<T>> createSuccessResponse(URI uri, T data);
 
-    ResponseEntity<ApiResponse<T>> createErrorResponse();
+    ResponseEntity<ApiResponse<T>> updateSuccessResponse(T data);
 
-    ResponseEntity<ApiResponse<T>> errorServer(String message);
+    ResponseEntity<ApiResponse<T>> deleteSuccessResponse(T data);
+
+    ResponseEntity<ApiResponse<T>> foundSuccessResponse(T data);
+
+    ResponseEntity<ApiResponse<T>> createErrorResponse(String message);
+
+    ResponseEntity<ApiResponse<T>> errorServerResponse(String message);
+
+    ResponseEntity<ApiResponse<T>> notFoundSuccessResponse();
+
+
+    ResponseEntity<ApiResponse<List<T>>> foundListSuccessResponse(List<T> data);
+
+    ResponseEntity<ApiResponse<List<T>>> notFoundListSuccessResponse();
+
+    ResponseEntity<ApiResponse<List<T>>> errorServerListResponse(String message);
 }
