@@ -1,19 +1,17 @@
 package com.fashionlike.proyecto_fashion_like.domain.usecase;
 
-import com.fashionlike.proyecto_fashion_like.domain.model.Post;
+import com.fashionlike.proyecto_fashion_like.app.dto.PostDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PostUseCase {
-    Optional<Post> getPostById(Long id);
+    PostDTO getPostById(Integer id);
 
-    List<Post> getAllPosts();
+    List<PostDTO> getAllPosts();
 
-    void createPost(Long id, String title, String img, String description);
+    Integer createPost(PostDTO post);
 
-    void updatePost(Long id, String title, String img, String description);
+    void updatePost(Integer id, PostDTO post);
 
-
-    void deletePostById(Long id);
+    void deletePostById(Integer id);
 }

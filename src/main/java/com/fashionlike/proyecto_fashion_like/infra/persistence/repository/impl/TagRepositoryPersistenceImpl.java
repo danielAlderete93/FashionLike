@@ -24,7 +24,7 @@ public class TagRepositoryPersistenceImpl implements TagRepository {
     }
 
     @Override
-    public Optional<Tag> findById(Long id) {
+    public Optional<Tag> findById(Integer id) {
         return tagRepositoryPersistenceJPA.findById(id)
                 .flatMap(tagMapperPersistence::toDomain);
     }
@@ -56,8 +56,14 @@ public class TagRepositoryPersistenceImpl implements TagRepository {
 
     @Transactional
     @Override
-    public Boolean deleteById(Long id) {
+    public Boolean deleteById(Integer id) {
         tagRepositoryPersistenceJPA.deleteById(id);
         return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean existsTitle(String name) {
+        return tagRepositoryPersistenceJPA.existsName(name);
     }
 }

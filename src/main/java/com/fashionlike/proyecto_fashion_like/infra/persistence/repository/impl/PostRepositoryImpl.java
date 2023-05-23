@@ -63,4 +63,10 @@ public class PostRepositoryImpl implements PostRepository {
         persistence.deleteById(id);
         return true;
     }
+
+    @Override
+    public boolean existsByTitle(String title) {
+        return persistence.existsTitle(title);
+    }
+
 }

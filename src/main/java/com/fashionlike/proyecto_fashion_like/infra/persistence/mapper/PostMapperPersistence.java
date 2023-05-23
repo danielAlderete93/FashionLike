@@ -2,8 +2,10 @@ package com.fashionlike.proyecto_fashion_like.infra.persistence.mapper;
 
 import com.fashionlike.proyecto_fashion_like.domain.model.Post;
 import com.fashionlike.proyecto_fashion_like.domain.model.Tag;
+import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.PostEntity;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.TagEntity;
+import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,15 +19,18 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class PostMapperPersistence implements MapperPersistence<PostEntity, Post> {
     private MapperPersistence<TagEntity, Tag> tagMapperPersistence;
+    private MapperPersistence<UserEntity, User> userMapperPersistence;
 
 
     @Override
     public Optional<Post> toDomain(PostEntity entity) {
         Post post;
         List<Tag> tagList;
+        User user;
         if (entity == null) {
             return Optional.empty();
         }
+        user = userMapperPersistence.toDomain(entity.getAuthor()).orElse(null);
         tagList = entity.getTags().stream()
                 .map(tagMapperPersistence::toDomain)
                 .filter(Optional::isPresent)
@@ -41,6 +46,7 @@ public class PostMapperPersistence implements MapperPersistence<PostEntity, Post
                 .views(entity.getViews())
                 .tags(tagList)
                 .isActive(entity.getIsActive())
+                .author(user)
                 .build();
 
         return Optional.of(post);
@@ -50,9 +56,12 @@ public class PostMapperPersistence implements MapperPersistence<PostEntity, Post
     public Optional<PostEntity> toEntity(Post domain) {
         List<TagEntity> tagEntities;
         PostEntity postEntity;
+        UserEntity userEntity;
         if (domain == null) {
             return Optional.empty();
         }
+
+        userEntity = userMapperPersistence.toEntity(domain.getAuthor()).orElse(null);
 
         tagEntities = domain.getTags().stream()
                 .map(tagMapperPersistence::toEntity)
@@ -68,6 +77,7 @@ public class PostMapperPersistence implements MapperPersistence<PostEntity, Post
                 .title(domain.getTitle())
                 .views(domain.getViews())
                 .tags(tagEntities)
+                .author(userEntity)
                 .isActive(domain.getIsActive())
                 .build();
 

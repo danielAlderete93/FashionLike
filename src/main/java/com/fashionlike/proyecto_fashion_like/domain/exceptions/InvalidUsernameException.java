@@ -1,6 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.domain.exceptions;
 
-public class InvalidUsernameException extends UserDomainException {
+public class InvalidUsernameException extends DomainException {
     public InvalidUsernameException() {
     }
 

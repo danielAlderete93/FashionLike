@@ -3,7 +3,7 @@ package com.fashionlike.proyecto_fashion_like.app.usecase;
 import com.fashionlike.proyecto_fashion_like.app.dto.RoleDTO;
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.app.mapper.MapperController;
-import com.fashionlike.proyecto_fashion_like.domain.exceptions.UserDomainException;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.UserService;
@@ -38,7 +38,7 @@ public class UserUseCaseImpl implements UserUseCase {
     }
 
     @Override
-    public Integer createUser(UserDTO userDTO) throws UserDomainException {
+    public Integer createUser(UserDTO userDTO) throws DomainException {
         User user;
         Role role;
         /*TODO: VALIDACION DEL ROLE ACA*/
@@ -56,7 +56,7 @@ public class UserUseCaseImpl implements UserUseCase {
     }
 
     @Override
-    public void updateUser(Integer id, UserDTO userDTO) throws UserDomainException {
+    public void updateUser(Integer id, UserDTO userDTO) throws DomainException {
         User user;
         Role role;
         role = roleMapperController.toDomain(userDTO.getRole());

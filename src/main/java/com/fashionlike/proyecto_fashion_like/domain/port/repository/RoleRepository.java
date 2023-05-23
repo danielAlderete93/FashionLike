@@ -13,4 +13,6 @@ public interface RoleRepository {
     Integer save(Role role);
 
     Boolean deleteById(Integer id);
+
+    boolean existsByTitle(String title);
 }

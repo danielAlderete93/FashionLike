@@ -29,6 +29,10 @@ public class PostEntity {
     private Long views;
     @Column
     private Boolean isActive;
+
+    @ManyToOne
+    private UserEntity author;
+
     @OneToMany
     private List<TagEntity> tags;
 }

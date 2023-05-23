@@ -1,26 +1,21 @@
-package com.fashionlike.proyecto_fashion_like.domain.model;
+package com.fashionlike.proyecto_fashion_like.app.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
-
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @Builder
-public class Post {
+public class PostDTO {
     private Integer id;
     private String title;
     private String img;
     private String description;
     private Date date;
     private Long views;
-    private User author;
+    private Integer idAuthor;
     private Boolean isActive;
-    private List<Tag> tags;
-
-
+    private List<Integer> idTags;
 }

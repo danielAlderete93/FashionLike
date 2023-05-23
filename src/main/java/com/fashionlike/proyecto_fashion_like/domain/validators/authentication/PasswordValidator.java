@@ -12,8 +12,4 @@ public class PasswordValidator extends DomainValidator<User> {
         super(domainValidationCriteria);
     }
 
-    @Override
-    public void validate(User user) {
-        criteriaList.forEach(e -> e.validate(user));
-    }
 }

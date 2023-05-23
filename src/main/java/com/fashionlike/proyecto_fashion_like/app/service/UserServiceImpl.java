@@ -1,6 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.service;
 
-import com.fashionlike.proyecto_fashion_like.domain.exceptions.UserDomainException;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.UserRepository;
@@ -34,21 +34,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer createUser(User user) throws UserDomainException {
+    public Integer createUser(User user) throws DomainException {
         Role savedRole;
+        Integer idRole;
 
         authenticationValidator.validate(user);
 
-        Integer idRole = roleService.createRole(user.getRole());
-
+        idRole = roleService.createRole(user.getRole());
         savedRole = roleService.getRoleById(idRole);
 
         user.setRole(savedRole);
+
         return userRepository.save(user);
     }
 
     @Override
-    public void updateUser(Integer id, User user) throws UserDomainException {
+    public void updateUser(Integer id, User user) throws DomainException {
         User userToEdit = userRepository.findById(id).orElse(null);
 
         if (userToEdit == null) {

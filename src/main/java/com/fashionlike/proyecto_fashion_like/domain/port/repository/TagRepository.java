@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagRepository {
-    Optional<Tag> findById(Long id);
+    Optional<Tag> findById(Integer id);
 
     List<Tag> findAll();
 
     Integer save(Tag tag);
 
-    Boolean deleteById(Long id);
+    Boolean deleteById(Integer id);
+
+    boolean existsTitle(String name);
 }

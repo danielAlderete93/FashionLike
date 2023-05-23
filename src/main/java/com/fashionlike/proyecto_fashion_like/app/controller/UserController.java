@@ -4,7 +4,7 @@ package com.fashionlike.proyecto_fashion_like.app.controller;
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
 import com.fashionlike.proyecto_fashion_like.app.factories.ApiResponseBuilder;
-import com.fashionlike.proyecto_fashion_like.domain.exceptions.UserDomainException;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.UserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -71,7 +71,7 @@ public class UserController {
                     .toUri();
 
             return apiResponseBuilder.createSuccessResponse(location, createdUserDTO);
-        } catch (UserDomainException e) {
+        } catch (DomainException e) {
             return apiResponseBuilder.createErrorResponse(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();

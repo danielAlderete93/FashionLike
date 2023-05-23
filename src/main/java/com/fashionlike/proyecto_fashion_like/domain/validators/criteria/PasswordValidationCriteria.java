@@ -1,7 +1,7 @@
 package com.fashionlike.proyecto_fashion_like.domain.validators.criteria;
 
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.InvalidPasswordException;
-import com.fashionlike.proyecto_fashion_like.domain.exceptions.UserDomainException;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 
 public class PasswordValidationCriteria implements DomainValidationCriteria<User> {
@@ -12,7 +12,7 @@ public class PasswordValidationCriteria implements DomainValidationCriteria<User
     private static final String ERROR_NUMBER = "The password must contain at least one number";
 
     @Override
-    public void validate(User user) throws UserDomainException {
+    public void validate(User user) throws DomainException {
         String password = user.getPassword();
 
         validateMinimumLength(password);

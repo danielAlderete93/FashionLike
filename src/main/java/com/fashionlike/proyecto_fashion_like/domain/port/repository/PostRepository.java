@@ -14,4 +14,6 @@ public interface PostRepository {
     Integer save(Post post);
 
     Boolean deleteById(Integer id);
+
+    boolean existsByTitle(String title);
 }
