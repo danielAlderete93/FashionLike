@@ -17,7 +17,7 @@ public class Post {
     private String img;
     private String description;
     private Date date;
-    private Long views;
+    private Integer views;
     private User author;
     private Boolean isActive;
     private List<Tag> tags;

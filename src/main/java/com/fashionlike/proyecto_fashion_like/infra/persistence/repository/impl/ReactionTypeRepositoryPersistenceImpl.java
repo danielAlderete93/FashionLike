@@ -26,12 +26,9 @@ public class ReactionTypeRepositoryPersistenceImpl implements ReactionTypeReposi
     }
 
     @Override
-    public Optional<ReactionType> findById(Long id) {
-
+    public Optional<ReactionType> findById(Integer id) {
         return reactionTypeRepositoryPersistenceJPA.findById(id)
-                .map(reactionTypeMapperPersistence::toDomain)
-                .orElse(null)
-                ;
+                .flatMap(reactionTypeMapperPersistence::toDomain);
     }
 
     @Override
@@ -61,7 +58,23 @@ public class ReactionTypeRepositoryPersistenceImpl implements ReactionTypeReposi
 
     @Transactional
     @Override
-    public void deleteById(Long id) {
+    public Boolean deleteById(Integer id) {
+
+        if (!reactionTypeRepositoryPersistenceJPA.existsById(id)) {
+            return false;
+        }
+
         reactionTypeRepositoryPersistenceJPA.deleteById(id);
+        return true;
+    }
+
+    @Override
+    public boolean existsByEmoji(String emoji) {
+        return reactionTypeRepositoryPersistenceJPA.existsEmoji(emoji);
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return reactionTypeRepositoryPersistenceJPA.existsName(name);
     }
 }

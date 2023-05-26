@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like.app.factories;
+package com.fashionlike.proyecto_fashion_like.app.api;
 
 import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +11,8 @@ public interface ApiResponseBuilder<T> {
     ResponseEntity<ApiResponse<T>> createSuccessResponse(URI uri, T data);
 
     ResponseEntity<ApiResponse<T>> updateSuccessResponse(T data);
+
+    ResponseEntity<ApiResponse<T>> updateErrorResponse(String message);
 
     ResponseEntity<ApiResponse<T>> deleteSuccessResponse(T data);
 

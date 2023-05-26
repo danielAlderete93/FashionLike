@@ -1,18 +1,19 @@
 package com.fashionlike.proyecto_fashion_like.app.controller;
 
 import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
-import com.fashionlike.proyecto_fashion_like.app.dto.PostDTO;
-import com.fashionlike.proyecto_fashion_like.domain.usecase.PostUseCase;
+import com.fashionlike.proyecto_fashion_like.app.dto.TagDTO;
+import com.fashionlike.proyecto_fashion_like.domain.usecase.TagUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/post/")
-public class PostController extends BaseController<PostDTO> {
+@RequestMapping("api/tag/")
+public class TagController extends BaseController<TagDTO> {
 
     @Autowired
-    public PostController(PostUseCase useCase, ApiResponseBuilder<PostDTO> apiResponseBuilder) {
+    protected TagController(TagUseCase useCase, ApiResponseBuilder<TagDTO> apiResponseBuilder) {
         super(useCase, apiResponseBuilder);
     }
+
 }

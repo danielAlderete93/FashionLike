@@ -57,6 +57,9 @@ public class TagRepositoryPersistenceImpl implements TagRepository {
     @Transactional
     @Override
     public Boolean deleteById(Integer id) {
+        if(!tagRepositoryPersistenceJPA.existsById(id)){
+            return false;
+        }
         tagRepositoryPersistenceJPA.deleteById(id);
         return true;
     }

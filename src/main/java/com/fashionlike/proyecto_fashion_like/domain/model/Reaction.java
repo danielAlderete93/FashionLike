@@ -12,6 +12,4 @@ public class Reaction {
     private User user;
     private Post post;
     private ReactionType type;
-
-
 }

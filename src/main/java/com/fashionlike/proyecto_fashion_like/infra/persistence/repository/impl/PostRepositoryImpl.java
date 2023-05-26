@@ -60,6 +60,9 @@ public class PostRepositoryImpl implements PostRepository {
     @Transactional
     @Override
     public Boolean deleteById(Integer id) {
+        if (!persistence.existsById(id)) {
+            return false;
+        }
         persistence.deleteById(id);
         return true;
     }

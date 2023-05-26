@@ -16,29 +16,28 @@ public class TagServiceImpl implements TagService {
     private final TagValidator tagValidator;
 
     @Override
-    public Tag getTagById(Integer id) {
+    public Tag getById(Integer id) {
         return tagRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<Tag> getAllTags() {
+    public List<Tag> getAll() {
         return tagRepository.findAll();
     }
 
     @Override
-    public Integer createTag(Tag tag) {
-        //validacion
+    public Integer create(Tag tag) {
         tagValidator.validate(tag);
 
         return tagRepository.save(tag);
     }
 
     @Override
-    public void updateTag(Tag tag) {
-        Tag tagToEdit = tagRepository.findById(tag.getId()).orElse(null);
+    public void update(Integer id, Tag tag) {
+        Tag tagToEdit = tagRepository.findById(id).orElse(null);
 
         if (tagToEdit == null) {
-            createTag(tag);
+            create(tag);
         } else {
             tagValidator.validate(tag);
             tagToEdit.setTags(tag.getTags());
@@ -49,7 +48,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Boolean deleteTagById(Integer id) {
+    public Boolean deleteById(Integer id) {
         return tagRepository.deleteById(id);
     }
 }

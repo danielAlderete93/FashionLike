@@ -32,6 +32,10 @@ public class StatusResponse {
         return new StatusResponse("Success: Updated", message, 200);
     }
 
+    public static StatusResponse notUpdated(String message) {
+        return new StatusResponse("Error: Not updated", message, 400);
+    }
+
     public static StatusResponse deleted(String message) {
         return new StatusResponse("Success: Delete", message, 200);
     }

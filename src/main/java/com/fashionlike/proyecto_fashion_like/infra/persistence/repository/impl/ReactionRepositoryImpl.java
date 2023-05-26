@@ -60,6 +60,10 @@ public class ReactionRepositoryImpl implements ReactionRepository {
     @Transactional
     @Override
     public Boolean deleteById(Long id) {
+        if (!reactionRepositoryPersistenceJPA.existsById(id)) {
+            return false;
+        }
+
         reactionRepositoryPersistenceJPA.deleteById(id);
         return true;
     }

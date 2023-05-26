@@ -4,7 +4,7 @@ import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.RoleRepository;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.entity.RoleEntity;
 import com.fashionlike.proyecto_fashion_like.infra.persistence.mapper.MapperPersistence;
-import com.fashionlike.proyecto_fashion_like.infra.persistence.repository.RoleRespositoryPersistenceJPA;
+import com.fashionlike.proyecto_fashion_like.infra.persistence.repository.RoleRepositoryPersistenceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -15,18 +15,18 @@ import java.util.stream.Collectors;
 @Repository("roleRepositoryImpl")
 public class RoleRepositoryImpl implements RoleRepository {
 
-    private final RoleRespositoryPersistenceJPA roleRespositoryPersistenceJPA;
+    private final RoleRepositoryPersistenceJPA roleRepositoryPersistenceJPA;
     private final MapperPersistence<RoleEntity, Role> roleMapperPersistence;
 
     @Autowired
-    public RoleRepositoryImpl(RoleRespositoryPersistenceJPA roleRespositoryPersistenceJPA, MapperPersistence<RoleEntity, Role> roleMapperPersistence) {
-        this.roleRespositoryPersistenceJPA = roleRespositoryPersistenceJPA;
+    public RoleRepositoryImpl(RoleRepositoryPersistenceJPA roleRepositoryPersistenceJPA, MapperPersistence<RoleEntity, Role> roleMapperPersistence) {
+        this.roleRepositoryPersistenceJPA = roleRepositoryPersistenceJPA;
         this.roleMapperPersistence = roleMapperPersistence;
     }
 
     @Override
     public Optional<Role> findById(Integer id) {
-        return roleRespositoryPersistenceJPA.findById(id)
+        return roleRepositoryPersistenceJPA.findById(id)
                 .map(roleMapperPersistence::toDomain)
                 .orElse(null)
                 ;
@@ -35,7 +35,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     @Override
     public List<Role> findAll() {
 
-        return roleRespositoryPersistenceJPA.findAll().stream()
+        return roleRepositoryPersistenceJPA.findAll().stream()
                 .map(roleMapperPersistence::toDomain)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -49,7 +49,7 @@ public class RoleRepositoryImpl implements RoleRepository {
             return null;
         }
 
-        RoleEntity savedEntity = roleRespositoryPersistenceJPA.save(roleEntity.get());
+        RoleEntity savedEntity = roleRepositoryPersistenceJPA.save(roleEntity.get());
 
         return savedEntity.getId();
 
@@ -57,7 +57,10 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Boolean deleteById(Integer id) {
-        roleRespositoryPersistenceJPA.deleteById(id);
+        if (!roleRepositoryPersistenceJPA.existsById(id)) {
+            return false;
+        }
+        roleRepositoryPersistenceJPA.deleteById(id);
         return true;
     }
 }

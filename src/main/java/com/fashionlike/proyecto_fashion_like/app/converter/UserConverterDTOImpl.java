@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like.app.mapper;
+package com.fashionlike.proyecto_fashion_like.app.converter;
 
 import com.fashionlike.proyecto_fashion_like.app.dto.RoleDTO;
 import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class UserMapperControllerImpl implements MapperController<User, UserDTO> {
+public class UserConverterDTOImpl implements ConverterDTO<User, UserDTO> {
 
-    private final MapperController<Role, RoleDTO> roleMapperController;
+    private final ConverterDTO<Role, RoleDTO> roleConverterDTO;
 
     @Override
     public User toDomain(UserDTO dto) {
@@ -19,7 +19,7 @@ public class UserMapperControllerImpl implements MapperController<User, UserDTO>
         if (dto == null) {
             return null;
         }
-        role = roleMapperController.toDomain(dto.getRole());
+        role = roleConverterDTO.toDomain(dto.getRole());
         return User.builder()
                 .id(dto.getId())
                 .password(dto.getPassword())
@@ -37,7 +37,7 @@ public class UserMapperControllerImpl implements MapperController<User, UserDTO>
         if (domain == null) {
             return null;
         }
-        role = roleMapperController.toDTO(domain.getRole());
+        role = roleConverterDTO.toDTO(domain.getRole());
         return UserDTO.builder()
                 .id(domain.getId())
                 .username(domain.getUsername())

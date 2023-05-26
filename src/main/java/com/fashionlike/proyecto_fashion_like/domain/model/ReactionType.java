@@ -10,6 +10,6 @@ import lombok.*;
 public class ReactionType {
     private Integer id;
     private String name;
-    private Character emoji;
+    private String emoji;
 
 }

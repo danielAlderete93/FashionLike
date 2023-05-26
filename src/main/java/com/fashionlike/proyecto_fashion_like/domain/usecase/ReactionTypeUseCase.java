@@ -1,18 +1,7 @@
 package com.fashionlike.proyecto_fashion_like.domain.usecase;
 
-import com.fashionlike.proyecto_fashion_like.domain.model.ReactionType;
+import com.fashionlike.proyecto_fashion_like.app.dto.ReactionTypeDTO;
 
-import java.util.List;
-import java.util.Optional;
+public interface ReactionTypeUseCase extends BaseUseCase<ReactionTypeDTO> {
 
-public interface ReactionTypeUseCase {
-    Optional<ReactionType> getReactionTypeById(Long id);
-
-    List<ReactionType> getAllReactionType();
-
-    void createReactionType(Long id, String name, Character emoji);
-
-    void updateReactionType(Long id, String name, Character emoji);
-
-    void deleteReactionTypeById(Long id);
 }

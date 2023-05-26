@@ -3,40 +3,51 @@ package com.fashionlike.proyecto_fashion_like.app.service;
 import com.fashionlike.proyecto_fashion_like.domain.model.Post;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.PostRepository;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.PostService;
+import com.fashionlike.proyecto_fashion_like.domain.validators.posts.PostValidator;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class PostServiceImpl implements PostService {
+    private static final Date DATE_NOW = new Date();
+    private static final Integer DEFAULT_VIEWS = 0;
+
+    private final PostValidator validator;
     private final PostRepository postRepository;
 
-    public PostServiceImpl(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
-
     @Override
-    public Post getPostById(Integer id) {
+    public Post getById(Integer id) {
         return postRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<Post> getAllPosts() {
+    public List<Post> getAll() {
         return postRepository.findAll();
     }
 
     @Override
-    public Integer createPost(Post post) {
+    public Integer create(Post post) {
+        validator.validate(post);
+
+        post.setDate(DATE_NOW);
+        post.setViews(DEFAULT_VIEWS);
+
         return postRepository.save(post);
     }
 
     @Override
-    public void updatePost(Integer id, Post post) {
+    public void update(Integer id, Post post) {
         Post postToEdit = postRepository.findById(id).orElse(null);
 
         if (postToEdit == null) {
             postRepository.save(post);
         } else {
+            validator.validate(post);
+
             postToEdit.setImg(post.getImg());
             postToEdit.setTags(post.getTags());
             postToEdit.setDate(post.getDate());
@@ -50,7 +61,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Boolean deletePostById(Integer id) {
+    public Boolean deleteById(Integer id) {
 
         return postRepository.deleteById(id);
     }

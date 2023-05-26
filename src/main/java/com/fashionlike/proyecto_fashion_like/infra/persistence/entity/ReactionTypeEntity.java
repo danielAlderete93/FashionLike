@@ -17,5 +17,5 @@ public class ReactionTypeEntity {
     @Column
     private String name;
     @Column
-    private Character emoji;
+    private String emoji;
 }

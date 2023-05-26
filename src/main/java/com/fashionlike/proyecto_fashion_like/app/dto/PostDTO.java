@@ -14,7 +14,7 @@ public class PostDTO {
     private String img;
     private String description;
     private Date date;
-    private Long views;
+    private Integer views;
     private Integer idAuthor;
     private Boolean isActive;
     private List<Integer> idTags;

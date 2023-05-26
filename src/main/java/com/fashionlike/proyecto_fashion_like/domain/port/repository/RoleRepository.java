@@ -14,5 +14,4 @@ public interface RoleRepository {
 
     Boolean deleteById(Integer id);
 
-    boolean existsByTitle(String title);
 }

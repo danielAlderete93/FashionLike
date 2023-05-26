@@ -24,24 +24,24 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User getUserById(Integer id) {
+    public User getById(Integer id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public Integer createUser(User user) throws DomainException {
+    public Integer create(User user) throws DomainException {
         Role savedRole;
         Integer idRole;
 
         authenticationValidator.validate(user);
 
-        idRole = roleService.createRole(user.getRole());
-        savedRole = roleService.getRoleById(idRole);
+        idRole = roleService.create(user.getRole());
+        savedRole = roleService.getById(idRole);
 
         user.setRole(savedRole);
 
@@ -49,11 +49,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Integer id, User user) throws DomainException {
+    public void update(Integer id, User user) throws DomainException {
         User userToEdit = userRepository.findById(id).orElse(null);
 
         if (userToEdit == null) {
-            createUser(user);
+            create(user);
         } else {
             passwordValidator.validate(user);
             userToEdit.setName(user.getName());
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUserById(Integer id) {
+    public Boolean deleteById(Integer id) {
         return userRepository.deleteById(id);
     }
 }

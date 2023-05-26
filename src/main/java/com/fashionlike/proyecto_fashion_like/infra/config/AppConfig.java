@@ -1,17 +1,20 @@
 package com.fashionlike.proyecto_fashion_like.infra.config;
 
 import com.fashionlike.proyecto_fashion_like.domain.model.Post;
+import com.fashionlike.proyecto_fashion_like.domain.model.ReactionType;
 import com.fashionlike.proyecto_fashion_like.domain.model.Tag;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.PostRepository;
+import com.fashionlike.proyecto_fashion_like.domain.port.repository.ReactionTypeRepository;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.TagRepository;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.UserRepository;
 import com.fashionlike.proyecto_fashion_like.domain.validators.authentication.AuthenticationValidator;
 import com.fashionlike.proyecto_fashion_like.domain.validators.authentication.PasswordValidator;
 import com.fashionlike.proyecto_fashion_like.domain.validators.criteria.*;
 import com.fashionlike.proyecto_fashion_like.domain.validators.posts.PostValidator;
+import com.fashionlike.proyecto_fashion_like.domain.validators.reactions.ReactionTypeValidator;
 import com.fashionlike.proyecto_fashion_like.domain.validators.tag.TagValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -26,20 +29,19 @@ import java.util.List;
 @EnableJpaRepositories("com.fashionlike.proyecto_fashion_like.infra.persistence.repository")
 @ComponentScan("com.fashionlike.proyecto_fashion_like")
 @EntityScan("com.fashionlike.proyecto_fashion_like.infra.persistence.entity")
+@AllArgsConstructor
 public class AppConfig {
 
     private final UserRepository userRepository;
 
+    private final ReactionTypeRepository reactionTypeRepository;
     private final PostRepository postRepository;
     private final TagRepository tagRepository;
 
-    @Autowired
-    public AppConfig(UserRepository userRepository, PostRepository postRepository, TagRepository tagRepository) {
-        this.userRepository = userRepository;
-        this.postRepository = postRepository;
-        this.tagRepository = tagRepository;
+    @Bean
+    public AuthenticationValidator customAuthenticationValidator() {
+        return new AuthenticationValidator(setCriteriaAuthentication());
     }
-
 
     @Bean
     public AuthenticationValidator authenticationValidator() {
@@ -60,6 +62,14 @@ public class AppConfig {
     public TagValidator tagValidator() {
         return new TagValidator(setCriteriaTag());
     }
+
+    @Bean
+    public ReactionTypeValidator reactionTypeNameValidation() {
+
+        return new ReactionTypeValidator(initReactionTypeValidator());
+
+    }
+
 
     private List<DomainValidationCriteria<User>> setCriteriaAuthentication() {
         List<DomainValidationCriteria<User>> criteriaList = new ArrayList<>();
@@ -88,9 +98,13 @@ public class AppConfig {
         return criteriaList;
     }
 
-    @Bean
-    public AuthenticationValidator customAuthenticationValidator() {
-        return new AuthenticationValidator(setCriteriaAuthentication());
+    private List<DomainValidationCriteria<ReactionType>> initReactionTypeValidator() {
+        List<DomainValidationCriteria<ReactionType>> criteriaList = new ArrayList<>();
+        criteriaList.add(new EmojiValidationCriteria(reactionTypeRepository));
+        criteriaList.add(new ReactionTypeNameValidation(reactionTypeRepository));
+        return criteriaList;
     }
+
+
 }
 

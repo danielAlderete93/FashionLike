@@ -1,5 +1,6 @@
-package com.fashionlike.proyecto_fashion_like.app.factories;
+package com.fashionlike.proyecto_fashion_like.app.api.builder;
 
+import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
 import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
 import com.fashionlike.proyecto_fashion_like.app.dto.response.StatusResponse;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,10 @@ public abstract class AbstractApiResponseBuilder<T> implements ApiResponseBuilde
 
     protected String getUpdatedMessage() {
         return getEntityName() + " updated";
+    }
+
+    protected String getNotUpdatedMessage(String message) {
+        return "Error update: " + message;
     }
 
     protected String getDeletedMessage() {
@@ -50,6 +55,12 @@ public abstract class AbstractApiResponseBuilder<T> implements ApiResponseBuilde
     @Override
     public ResponseEntity<ApiResponse<T>> updateSuccessResponse(T data) {
         ApiResponse<T> apiResponse = ApiResponse.success(data, StatusResponse.updated(getUpdatedMessage()));
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse<T>> updateErrorResponse(String message) {
+        ApiResponse<T> apiResponse = ApiResponse.error(StatusResponse.notUpdated(getNotUpdatedMessage(message)));
         return ResponseEntity.ok(apiResponse);
     }
 

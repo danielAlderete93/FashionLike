@@ -1,7 +1,6 @@
-package com.fashionlike.proyecto_fashion_like.app.mapper;
+package com.fashionlike.proyecto_fashion_like.app.converter;
 
 import com.fashionlike.proyecto_fashion_like.app.dto.PostDTO;
-import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.domain.model.Post;
 import com.fashionlike.proyecto_fashion_like.domain.model.Tag;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
@@ -15,8 +14,8 @@ import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
-public class PostMapperControllerImpl implements MapperController<Post, PostDTO> {
-    private final MapperController<User, UserDTO> userMapperController;
+public class PostConverterDTOImpl implements ConverterDTO<Post, PostDTO> {
+
     private final UserService userService;
     private final TagService tagService;
 
@@ -29,8 +28,8 @@ public class PostMapperControllerImpl implements MapperController<Post, PostDTO>
             return null;
         }
 
-        author = userService.getUserById(dto.getIdAuthor());
-        tags = dto.getIdTags().stream().map(tagService::getTagById).collect(Collectors.toList());
+        author = userService.getById(dto.getIdAuthor());
+        tags = dto.getIdTags().stream().map(tagService::getById).collect(Collectors.toList());
 
         return Post.builder()
                 .id(dto.getId())
@@ -45,6 +44,23 @@ public class PostMapperControllerImpl implements MapperController<Post, PostDTO>
 
     @Override
     public PostDTO toDTO(Post domain) {
-        return null;
+
+        List<Integer> tags;
+
+        if (domain == null) {
+            return null;
+        }
+
+        tags = domain.getTags().stream().map(Tag::getId).collect(Collectors.toList());
+
+        return PostDTO.builder()
+                .id(domain.getId())
+                .date(domain.getDate())
+                .img(domain.getImg())
+                .views(domain.getViews())
+                .title(domain.getTitle())
+                .idTags(tags)
+                .idAuthor(domain.getAuthor().getId())
+                .build();
     }
 }

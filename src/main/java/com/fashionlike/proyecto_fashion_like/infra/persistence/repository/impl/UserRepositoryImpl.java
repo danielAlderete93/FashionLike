@@ -53,6 +53,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Boolean deleteById(Integer id) {
+        if (!userRepositoryPersistenceJPA.existsById(id)) {
+            return false;
+        }
         userRepositoryPersistenceJPA.deleteById(id);
         return true;
     }

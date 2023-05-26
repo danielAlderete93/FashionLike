@@ -26,7 +26,7 @@ public class PostEntity {
     @Column
     private Date date;
     @Column
-    private Long views;
+    private Integer views;
     @Column
     private Boolean isActive;
 

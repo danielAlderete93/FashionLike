@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like.app.mapper;
+package com.fashionlike.proyecto_fashion_like.app.converter;
 
 import com.fashionlike.proyecto_fashion_like.app.dto.RoleDTO;
 import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
@@ -7,7 +7,7 @@ import com.fashionlike.proyecto_fashion_like.domain.model.role.RoleStandard;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoleMapperControllerImpl implements MapperController<Role, RoleDTO> {
+public class RoleConverterDTOImpl implements ConverterDTO<Role, RoleDTO> {
     @Override
     public Role toDomain(RoleDTO dto) {
 
