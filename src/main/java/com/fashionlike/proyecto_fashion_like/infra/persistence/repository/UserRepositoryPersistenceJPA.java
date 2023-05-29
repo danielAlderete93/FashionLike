@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepositoryPersistenceJPA extends JpaRepository<UserEntity, Integer> {
     @Query("SELECT CASE WHEN COUNT(u) > 0 THEN true ELSE false END FROM users u WHERE u.username = ?1")
     boolean existsUsername(String name);
+
+    @Query("SELECT u FROM users u WHERE u.username = ?1")
+    UserEntity findByUsername(String username);
 }

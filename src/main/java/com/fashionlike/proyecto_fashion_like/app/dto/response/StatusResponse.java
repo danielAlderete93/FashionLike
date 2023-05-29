@@ -44,5 +44,9 @@ public class StatusResponse {
         return new StatusResponse("Success", message, 200);
     }
 
+    public static StatusResponse errorUnauthorized(String message) {
+        return new StatusResponse("Error: Unauthorized", message, 401);
+    }
+
 
 }

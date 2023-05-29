@@ -25,6 +25,8 @@ public interface ApiResponseBuilder<T> {
     ResponseEntity<ApiResponse<T>> notFoundSuccessResponse();
 
 
+
+
     ResponseEntity<ApiResponse<List<T>>> foundListSuccessResponse(List<T> data);
 
     ResponseEntity<ApiResponse<List<T>>> notFoundListSuccessResponse();

@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/post/")
+@RequestMapping("api/private/post/")
 public class PostController extends BaseController<PostDTO> {
 
     @Autowired
     public PostController(PostUseCase useCase, ApiResponseBuilder<PostDTO> apiResponseBuilder) {
         super(useCase, apiResponseBuilder);
     }
+
+
 }

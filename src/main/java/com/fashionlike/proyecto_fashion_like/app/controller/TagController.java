@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/tag/")
+@RequestMapping("api/private/tag/")
 public class TagController extends BaseController<TagDTO> {
 
     @Autowired

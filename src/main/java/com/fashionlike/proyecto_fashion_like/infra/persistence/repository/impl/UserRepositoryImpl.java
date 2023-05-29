@@ -65,4 +65,10 @@ public class UserRepositoryImpl implements UserRepository {
         return userRepositoryPersistenceJPA.existsUsername(username);
     }
 
+    @Override
+    public Optional<User> findByUsername(String username){
+        UserEntity entity = userRepositoryPersistenceJPA.findByUsername(username);
+        return userMapperPersistence.toDomain(entity);
+    }
+
 }

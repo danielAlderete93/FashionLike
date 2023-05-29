@@ -2,10 +2,10 @@ package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
 
 import com.fashionlike.proyecto_fashion_like.domain.model.ActionType;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 import lombok.Builder;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
 
 @Entity

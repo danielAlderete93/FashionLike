@@ -1,10 +1,10 @@
 package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
 import com.fashionlike.proyecto_fashion_like.domain.model.ActionType;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Entity(name = "roles")

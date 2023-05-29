@@ -1,8 +1,8 @@
 package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
