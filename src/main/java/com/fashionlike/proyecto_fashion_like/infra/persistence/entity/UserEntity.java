@@ -1,5 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.infra.persistence.entity;
 
+import com.fashionlike.proyecto_fashion_like.domain.model.Role;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,7 +24,8 @@ public class UserEntity {
     private String password;
     @Column
     private Boolean isActive;
-    @ManyToOne
-    private RoleEntity role;
+    @Enumerated
+    private Role role;
+
 
 }

@@ -1,5 +1,14 @@
 package com.fashionlike.proyecto_fashion_like.domain.usecase;
 
+import com.fashionlike.proyecto_fashion_like.app.dto.LoginRequest;
+import com.fashionlike.proyecto_fashion_like.app.dto.RegisterRequest;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.InvalidCredentialsException;
+
 public interface AuthUseCase {
-    String login(String username, String password);
+    String login(LoginRequest loginRequest);
+
+    Integer register(RegisterRequest registerRequest);
+
+
+    void verifyCredentials(String username, String password) throws InvalidCredentialsException;
 }

@@ -1,5 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.dto;
 
+import com.fashionlike.proyecto_fashion_like.domain.model.Role;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,5 +12,5 @@ public class UserDTO {
     private String username;
     private String password;
     private Boolean isActive;
-    private RoleDTO role;
+    private Role role;
 }

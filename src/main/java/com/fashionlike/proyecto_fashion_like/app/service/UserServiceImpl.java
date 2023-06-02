@@ -1,10 +1,9 @@
 package com.fashionlike.proyecto_fashion_like.app.service;
 
+import com.fashionlike.proyecto_fashion_like.app.util.PasswordEncryptionUtil;
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
-import com.fashionlike.proyecto_fashion_like.domain.model.role.Role;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.UserRepository;
-import com.fashionlike.proyecto_fashion_like.domain.port.service.RoleService;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.UserService;
 import com.fashionlike.proyecto_fashion_like.domain.validators.authentication.AuthenticationValidator;
 import com.fashionlike.proyecto_fashion_like.domain.validators.authentication.PasswordValidator;
@@ -18,9 +17,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleService roleService;
     private final AuthenticationValidator authenticationValidator;
     private final PasswordValidator passwordValidator;
+
+    private final PasswordEncryptionUtil passwordEncryption;
 
 
     @Override
@@ -35,16 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer create(User user) throws DomainException {
-        Role savedRole;
-        Integer idRole;
-
-        authenticationValidator.validate(user);
-
-        idRole = roleService.create(user.getRole());
-        savedRole = roleService.getById(idRole);
-
-        user.setRole(savedRole);
-
+        String password = user.getPassword();
+        String encryptedPassword = passwordEncryption.encrypt(password);
+        user.setPassword(encryptedPassword);
         return userRepository.save(user);
     }
 
@@ -68,4 +61,11 @@ public class UserServiceImpl implements UserService {
     public Boolean deleteById(Integer id) {
         return userRepository.deleteById(id);
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElse(null);
+    }
+
+
 }

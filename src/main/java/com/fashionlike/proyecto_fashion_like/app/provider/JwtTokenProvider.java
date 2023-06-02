@@ -26,25 +26,45 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + validityInMilliseconds);
 
-        return Jwts.builder()
+
+        String token = Jwts.builder()
                 .setSubject(user.getName())
                 .claim("id", user.getId())
                 .claim("username", user.getUsername())
+                .claim("role", user.getRole())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(secretKey)
                 .compact();
+
+        return "Bearer " + token;
     }
 
     public Integer getUserIdFromToken(String token) {
+        String extractToken = extractTokenFromHeader(token);
+
+        if (extractToken == null) {
+            return null;
+        }
+
+
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(extractToken)
                 .getBody();
 
         return claims.get("id", Integer.class);
     }
+
+    public Claims getClaimsFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
 
     public boolean validateToken(String token) {
         try {
@@ -57,5 +77,16 @@ public class JwtTokenProvider {
             // Manejo de excepciones en caso de token inválido o expirado
             return false;
         }
+    }
+
+    public String extractTokenFromHeader(String headerValue) {
+        if (headerValue != null && headerValue.startsWith("Bearer ")) {
+            return headerValue.substring(7);
+        }
+        return null;
+    }
+
+    public String getUsernameFromToken(String token) {
+        return getClaimsFromToken(token).get("username", String.class);
     }
 }

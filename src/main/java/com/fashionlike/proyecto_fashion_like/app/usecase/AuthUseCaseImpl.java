@@ -1,43 +1,116 @@
 package com.fashionlike.proyecto_fashion_like.app.usecase;
 
+import com.fashionlike.proyecto_fashion_like.app.dto.LoginRequest;
+import com.fashionlike.proyecto_fashion_like.app.dto.RegisterRequest;
 import com.fashionlike.proyecto_fashion_like.app.provider.JwtTokenProvider;
-import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
-import com.fashionlike.proyecto_fashion_like.domain.exceptions.InvalidPasswordException;
+import com.fashionlike.proyecto_fashion_like.app.util.PasswordEncryptionUtil;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.InvalidCredentialsException;
+import com.fashionlike.proyecto_fashion_like.domain.exceptions.InvalidRegisterException;
+import com.fashionlike.proyecto_fashion_like.domain.model.Role;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
-import com.fashionlike.proyecto_fashion_like.domain.port.repository.UserRepository;
+import com.fashionlike.proyecto_fashion_like.domain.port.repository.AuthTokenRepository;
+import com.fashionlike.proyecto_fashion_like.domain.port.service.UserService;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.AuthUseCase;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class AuthUseCaseImpl implements AuthUseCase {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
+    private final AuthTokenRepository tokenRepository;
+    private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final PasswordEncryptionUtil passwordEncryption;
 
 
     @Override
-    public String login(String username, String password) throws DomainException {
+    public String login(LoginRequest loginRequest) throws InvalidCredentialsException {
+        String password;
+        String username;
+        String token;
+        String userId;
+        User user;
 
-        Optional<User> user = userRepository.findByUsername(username);
-
-
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("Invalid credentials");
+        if (loginRequest == null) {
+            throw new InvalidCredentialsException("Invalid credentials. Login null");
         }
+        password = loginRequest.getPassword();
+        username = loginRequest.getUsername();
+        user = userService.findByUsername(username);
+
+        verifyCredentials(username, password);
 
 
-        if (!password.equals(user.get().getPassword())) {
-            throw new InvalidPasswordException("Invalid credentials");
-        }
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
-        return jwtTokenProvider.generateToken(user.get());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+        token = jwtTokenProvider.generateToken(user);
+        userId = user.getId().toString();
+
+        tokenRepository.saveAuthToken(userId, token);
+
+        return token;
     }
 
-    // Otros métodos de la interfaz AuthUseCase
+    @Override
+    public Integer register(RegisterRequest registerRequest) {
+
+
+        validateRegister(registerRequest);
+
+        User user = getUserStandard(registerRequest);
+
+
+        return userService.create(user);
+    }
+
+    @Override
+    public void verifyCredentials(String username, String password) throws InvalidCredentialsException {
+
+
+        User user = userService.findByUsername(username);
+
+        if (user == null) {
+            throw new InvalidCredentialsException("Invalid credentials. No exists");
+        }
+
+        if (!passwordEncryption.matches(password, user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid credentials. Password error");
+        }
+
+
+    }
+
+    private void validateRegister(RegisterRequest registerRequest) {
+        if (registerRequest == null) {
+            throw new InvalidRegisterException("Invalid register. The record is null");
+        }
+
+        if (registerRequest.getUsername() == null && registerRequest.getName() == null && registerRequest.getPassword() == null) {
+            throw new InvalidRegisterException("Invalid register. Username, name or password are null");
+        }
+
+
+    }
+
+    private User getUserStandard(RegisterRequest registerRequest) {
+        return User.builder()
+                .name(registerRequest.getName())
+                .username(registerRequest.getUsername())
+                .password(registerRequest.getPassword())
+                .role(Role.ROLE_USER)
+                .isActive(true)
+                .build();
+    }
+
 }
 

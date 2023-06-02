@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN') and isAuthenticated()")
 public abstract class BaseController<DTO> {
     private final BaseUseCase<DTO> useCase;
     private final ApiResponseBuilder<DTO> apiResponseBuilder;
@@ -23,6 +25,7 @@ public abstract class BaseController<DTO> {
 
     @GetMapping("{id}")
     @ResponseBody
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<DTO>> getByID(@PathVariable Integer id) {
         try {
             DTO dto = useCase.getById(id);
@@ -39,6 +42,7 @@ public abstract class BaseController<DTO> {
 
     @GetMapping("/all")
     @ResponseBody
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<List<DTO>>> getAll() {
         try {
             List<DTO> dto = useCase.getAll();
@@ -55,16 +59,17 @@ public abstract class BaseController<DTO> {
 
 
     @PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<DTO>> create(@RequestBody DTO dto) {
         DTO createdDTO;
         URI location;
         try {
-            Integer postId = useCase.create(dto);
-            createdDTO = useCase.getById(postId);
+            Integer id = useCase.create(dto);
+            createdDTO = useCase.getById(id);
 
             location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(postId)
+                    .buildAndExpand(id)
                     .toUri();
 
             return apiResponseBuilder.createSuccessResponse(location, createdDTO);
@@ -77,6 +82,7 @@ public abstract class BaseController<DTO> {
     }
 
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<DTO>> update(@PathVariable Integer id, @RequestBody DTO dto) {
         DTO dtoUpdated;
         try {
@@ -94,6 +100,7 @@ public abstract class BaseController<DTO> {
     }
 
     @DeleteMapping(value = "/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<DTO>> delete(@PathVariable Integer id) {
         try {
             DTO dto = useCase.getById(id);
