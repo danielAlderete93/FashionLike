@@ -61,6 +61,7 @@ public class AuthController {
         // Lógica para autenticar al usuario y generar el token JWT
         UserDTO createdDTO;
         URI location;
+
         try {
             Integer id = authUseCase.register(registerRequest);
             createdDTO = useCase.getById(id);
@@ -69,8 +70,8 @@ public class AuthController {
                     .path("/{id}")
                     .buildAndExpand(id)
                     .toUri();
-
-            mailSenderUseCase.sendValidationRegister(createdDTO);
+            String token = authUseCase.generateRegisterTokenForUserByID(id);
+            mailSenderUseCase.sendValidationRegister(createdDTO, token);
 
             return apiResponseBuilder.createSuccessResponse(location, createdDTO);
         } catch (DomainException e) {
@@ -78,6 +79,31 @@ public class AuthController {
         } catch (Exception e) {
             e.printStackTrace();
             return apiResponseBuilder.errorServerResponse(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/validate")
+    @ResponseBody
+    public ResponseEntity<ApiResponse<String>> activeUser(@RequestParam String token) {
+        // Lógica para autenticar al usuario y generar el token JWT
+        ApiResponse<String> apiResponse;
+        ResponseEntity<ApiResponse<String>> response;
+        try {
+            if (authUseCase.activeUser(token)) {
+                apiResponse = ApiResponse.success("User is active", StatusResponse.found("Active"));
+                response = ResponseEntity.ok(apiResponse);
+            } else {
+                apiResponse = ApiResponse.error(StatusResponse.notFound("No active"));
+                response = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+            }
+
+            return response;
+        } catch (DomainException e) {
+            apiResponse = ApiResponse.error(StatusResponse.errorUnauthorized(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+        } catch (Exception e) {
+            apiResponse = ApiResponse.error(StatusResponse.errorServer(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
         }
     }
 

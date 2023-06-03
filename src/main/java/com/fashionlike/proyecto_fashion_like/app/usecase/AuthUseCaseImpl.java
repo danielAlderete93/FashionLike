@@ -75,6 +75,25 @@ public class AuthUseCaseImpl implements AuthUseCase {
     }
 
     @Override
+    public boolean activeUser(String token) {
+        Integer idUser = jwtTokenProvider.getUserIdFromToken(token);
+        User user = userService.getById(idUser);
+
+        if (user == null) {
+            return false;
+        }
+
+        user.setIsActive(true);
+
+        userService.update(idUser, user);
+
+
+        return true;
+
+
+    }
+
+    @Override
     public void verifyCredentials(String username, String password) throws InvalidCredentialsException {
 
 
@@ -89,6 +108,16 @@ public class AuthUseCaseImpl implements AuthUseCase {
         }
 
 
+    }
+
+    @Override
+    public String generateRegisterTokenForUserByID(Integer id) {
+        User user = userService.getById(id);
+        if (user == null) {
+            return null;
+        }
+
+        return jwtTokenProvider.generateToken(user);
     }
 
     private void validateRegister(RegisterRequest registerRequest) {

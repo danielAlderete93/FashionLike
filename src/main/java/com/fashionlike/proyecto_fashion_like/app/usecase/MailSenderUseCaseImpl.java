@@ -13,9 +13,17 @@ public class MailSenderUseCaseImpl implements MailSenderUseCase {
     private static final String SUBJECT_MESSAGE = "Activate account";
     private final MailSenderService mailSenderService;
 
-    @Override
-    public void sendValidationRegister(UserDTO user) {
 
-        mailSenderService.sendEmail(user.getMail(), SUBJECT_MESSAGE, "Este es el mail");
+    @Override
+    public void sendValidationRegister(UserDTO user, String token) {
+        mailSenderService.sendEmail(user.getMail(), SUBJECT_MESSAGE, getBody(token));
+    }
+
+    private String getBody(String token) {
+        return "<h1> Bienvenido a Fashion Like</h1>" +
+                "<p>Para validar tu cuenta debes hacer click en el siguiente link:</p>" +
+                "<a href='http://localhost:8080/api/public/auth/validate?token=" +
+                token +
+                "'>valida cuenta</a>";
     }
 }

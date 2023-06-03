@@ -9,6 +9,10 @@ public interface AuthUseCase {
 
     Integer register(RegisterRequest registerRequest);
 
+    boolean activeUser(String token);
+
 
     void verifyCredentials(String username, String password) throws InvalidCredentialsException;
+
+    String generateRegisterTokenForUserByID(Integer id);
 }

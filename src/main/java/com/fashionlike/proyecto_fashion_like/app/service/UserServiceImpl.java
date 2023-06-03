@@ -35,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer create(User user) throws DomainException {
+        authenticationValidator.validate(user);
         String password = user.getPassword();
         String encryptedPassword = passwordEncryption.encrypt(password);
         user.setPassword(encryptedPassword);
@@ -50,8 +51,10 @@ public class UserServiceImpl implements UserService {
         } else {
             passwordValidator.validate(user);
             userToEdit.setName(user.getName());
-            userToEdit.setPassword(user.getPassword());
+            userToEdit.setMail(user.getMail());
             userToEdit.setIsActive(user.getIsActive());
+            userToEdit.setPassword(user.getPassword());
+            userToEdit.setRole(user.getRole());
             userRepository.save(userToEdit);
         }
 
