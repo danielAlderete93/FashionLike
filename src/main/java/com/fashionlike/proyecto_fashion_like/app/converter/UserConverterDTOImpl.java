@@ -24,6 +24,7 @@ public class UserConverterDTOImpl implements ConverterDTO<User, UserDTO> {
                 .name(dto.getName())
                 .username(dto.getUsername())
                 .isActive(dto.getIsActive())
+                .mail(dto.getMail())
                 .role(dto.getRole())
                 .build();
 
@@ -39,6 +40,7 @@ public class UserConverterDTOImpl implements ConverterDTO<User, UserDTO> {
                 .username(domain.getUsername())
                 .password(domain.getPassword())
                 .name(domain.getName())
+                .mail(domain.getMail())
                 .isActive(domain.getIsActive())
                 .role(domain.getRole())
                 .build();

@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
+@ToString
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,6 +23,8 @@ public class UserEntity {
     private String username;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
+    private String mail;
     @Column
     private Boolean isActive;
     @Enumerated

@@ -16,9 +16,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+
+@Component
 @AllArgsConstructor
 public class AuthUseCaseImpl implements AuthUseCase {
 
@@ -107,8 +108,9 @@ public class AuthUseCaseImpl implements AuthUseCase {
                 .name(registerRequest.getName())
                 .username(registerRequest.getUsername())
                 .password(registerRequest.getPassword())
+                .mail(registerRequest.getMail())
                 .role(Role.ROLE_USER)
-                .isActive(true)
+                .isActive(false)
                 .build();
     }
 

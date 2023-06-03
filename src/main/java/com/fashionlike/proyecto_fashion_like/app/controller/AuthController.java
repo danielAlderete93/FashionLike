@@ -9,11 +9,13 @@ import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
 import com.fashionlike.proyecto_fashion_like.app.dto.response.StatusResponse;
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.AuthUseCase;
+import com.fashionlike.proyecto_fashion_like.domain.usecase.MailSenderUseCase;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.UserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +27,8 @@ import java.net.URI;
 public class AuthController {
     private final AuthUseCase authUseCase;
     private final UserUseCase useCase;
+
+    private final MailSenderUseCase mailSenderUseCase;
 
     ApiResponseBuilder<UserDTO> apiResponseBuilder;
 
@@ -52,6 +56,7 @@ public class AuthController {
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
+    @Transactional
     public ResponseEntity<ApiResponse<UserDTO>> register(@RequestBody RegisterRequest registerRequest) {
         // Lógica para autenticar al usuario y generar el token JWT
         UserDTO createdDTO;
@@ -64,6 +69,8 @@ public class AuthController {
                     .path("/{id}")
                     .buildAndExpand(id)
                     .toUri();
+
+            mailSenderUseCase.sendValidationRegister(createdDTO);
 
             return apiResponseBuilder.createSuccessResponse(location, createdDTO);
         } catch (DomainException e) {
