@@ -1,16 +1,16 @@
 package com.fashionlike.proyecto_fashion_like.app.controller;
 
 import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
-import com.fashionlike.proyecto_fashion_like.app.dto.LoginRequest;
-import com.fashionlike.proyecto_fashion_like.app.dto.RegisterRequest;
-import com.fashionlike.proyecto_fashion_like.app.dto.TokenResponse;
-import com.fashionlike.proyecto_fashion_like.app.dto.UserDTO;
-import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
-import com.fashionlike.proyecto_fashion_like.app.dto.response.StatusResponse;
+import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.LoginRequestDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.RegisterRequestDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.LoginResponseDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.user.dto.UserDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.ApiResponse;
+import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.StatusResponse;
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.AuthUseCase;
+import com.fashionlike.proyecto_fashion_like.domain.usecase.CRUDUseCase;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.MailSenderUseCase;
-import com.fashionlike.proyecto_fashion_like.domain.usecase.UserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +26,7 @@ import java.net.URI;
 @AllArgsConstructor
 public class AuthController {
     private final AuthUseCase authUseCase;
-    private final UserUseCase useCase;
+    private final CRUDUseCase<UserDTO> useCase;
 
     private final MailSenderUseCase mailSenderUseCase;
 
@@ -35,21 +35,21 @@ public class AuthController {
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ApiResponse<TokenResponse>> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ApiResponse<LoginResponseDTO>> login(@RequestBody LoginRequestDTO loginRequestDTO) {
         // Lógica para autenticar al usuario y generar el token JWT
         try {
-            String token = authUseCase.login(loginRequest);
+            String token = authUseCase.login(loginRequestDTO);
 
-            TokenResponse tokenResponse = TokenResponse.builder().token(token).build();
-            ApiResponse<TokenResponse> response = new ApiResponse<>(tokenResponse, StatusResponse.found("authentication"));
+            LoginResponseDTO loginResponseDTO = LoginResponseDTO.builder().token(token).build();
+            ApiResponse<LoginResponseDTO> response = new ApiResponse<>(loginResponseDTO, StatusResponse.found("authentication"));
 
             return ResponseEntity.ok(response);
         } catch (DomainException e) {
-            ApiResponse<TokenResponse> response = new ApiResponse<>(null, StatusResponse.errorUnauthorized(e.getMessage()));
+            ApiResponse<LoginResponseDTO> response = new ApiResponse<>(null, StatusResponse.errorUnauthorized(e.getMessage()));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         } catch (Exception e) {
             e.printStackTrace();
-            ApiResponse<TokenResponse> response = new ApiResponse<>(null, StatusResponse.errorServer(e.getMessage()));
+            ApiResponse<LoginResponseDTO> response = new ApiResponse<>(null, StatusResponse.errorServer(e.getMessage()));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
@@ -57,13 +57,13 @@ public class AuthController {
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @Transactional
-    public ResponseEntity<ApiResponse<UserDTO>> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<ApiResponse<UserDTO>> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
         // Lógica para autenticar al usuario y generar el token JWT
         UserDTO createdDTO;
         URI location;
 
         try {
-            Integer id = authUseCase.register(registerRequest);
+            Integer id = authUseCase.register(registerRequestDTO);
             createdDTO = useCase.getById(id);
 
             location = ServletUriComponentsBuilder.fromCurrentRequest()

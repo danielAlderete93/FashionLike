@@ -1,6 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.api;
 
-import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
+import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.net.URI;

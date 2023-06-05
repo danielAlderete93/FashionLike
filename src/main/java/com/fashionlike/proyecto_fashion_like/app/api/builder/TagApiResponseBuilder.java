@@ -1,6 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.api.builder;
 
-import com.fashionlike.proyecto_fashion_like.app.dto.TagDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.tag.dto.TagDTO;
 import org.springframework.stereotype.Component;
 
 @Component

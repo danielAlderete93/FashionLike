@@ -1,6 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.api.builder;
 
-import com.fashionlike.proyecto_fashion_like.app.dto.PostDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.post.dto.PostDTO;
 import org.springframework.stereotype.Component;
 
 @Component

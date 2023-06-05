@@ -1,8 +1,8 @@
 package com.fashionlike.proyecto_fashion_like.app.api.builder;
 
 import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
-import com.fashionlike.proyecto_fashion_like.app.dto.response.ApiResponse;
-import com.fashionlike.proyecto_fashion_like.app.dto.response.StatusResponse;
+import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.ApiResponse;
+import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.StatusResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

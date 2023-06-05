@@ -1,6 +1,7 @@
 package com.fashionlike.proyecto_fashion_like.app.service;
 
 import com.fashionlike.proyecto_fashion_like.domain.model.Post;
+import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import com.fashionlike.proyecto_fashion_like.domain.port.repository.PostRepository;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.PostService;
 import com.fashionlike.proyecto_fashion_like.domain.validators.posts.PostValidator;
@@ -64,5 +65,10 @@ public class PostServiceImpl implements PostService {
     public Boolean deleteById(Integer id) {
 
         return postRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Post> getPostFromAuthor(User user) {
+        return postRepository.findAllForAuthor(user);
     }
 }

@@ -1,6 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.api.builder;
 
-import com.fashionlike.proyecto_fashion_like.app.dto.ReactionTypeDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.reactiontype.dto.ReactionTypeDTO;
 import org.springframework.stereotype.Component;
 
 @Component
