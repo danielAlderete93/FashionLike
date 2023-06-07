@@ -10,5 +10,5 @@ public class UserSummaryDTO {
     private String name;
     private String username;
     private String mail;
-    private Role role;
+    private String role;
 }

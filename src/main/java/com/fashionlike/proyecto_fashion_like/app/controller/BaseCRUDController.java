@@ -1,6 +1,6 @@
 package com.fashionlike.proyecto_fashion_like.app.controller;
 
-import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
+import com.fashionlike.proyecto_fashion_like.app.api.builder.crud.ApiCRUDResponseBuilder;
 import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.ApiResponse;
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.CRUDUseCase;
@@ -17,10 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@PreAuthorize("hasAnyRole('ROLE_USER','ROLE_ADMIN') and isAuthenticated()")
 public abstract class BaseCRUDController<T> {
     protected final CRUDUseCase<T> useCase;
-    protected final ApiResponseBuilder<T> apiResponseBuilder;
+    protected final ApiCRUDResponseBuilder<T> apiCRUDResponseBuilder;
 
 
     @GetMapping("{id}")
@@ -30,13 +29,13 @@ public abstract class BaseCRUDController<T> {
         try {
             T t = useCase.getById(id);
             if (t == null) {
-                return apiResponseBuilder.notFoundSuccessResponse();
+                return apiCRUDResponseBuilder.notFoundSuccessResponse();
             }
-            return apiResponseBuilder.foundSuccessResponse(t);
+            return apiCRUDResponseBuilder.foundSuccessResponse(t);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return apiResponseBuilder.errorServerResponse(e.getMessage());
+            return apiCRUDResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 
@@ -47,13 +46,13 @@ public abstract class BaseCRUDController<T> {
         try {
             List<T> t = useCase.getAll();
             if (t.isEmpty()) {
-                return apiResponseBuilder.foundListSuccessResponse(new ArrayList<>());
+                return apiCRUDResponseBuilder.foundListSuccessResponse(new ArrayList<>());
             }
-            return apiResponseBuilder.foundListSuccessResponse(t);
+            return apiCRUDResponseBuilder.foundListSuccessResponse(t);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return apiResponseBuilder.errorServerListResponse(e.getMessage());
+            return apiCRUDResponseBuilder.errorServerListResponse(e.getMessage());
         }
     }
 
@@ -72,12 +71,12 @@ public abstract class BaseCRUDController<T> {
                     .buildAndExpand(id)
                     .toUri();
 
-            return apiResponseBuilder.createSuccessResponse(location, createdT);
+            return apiCRUDResponseBuilder.createSuccessResponse(location, createdT);
         } catch (DomainException e) {
-            return apiResponseBuilder.createErrorResponse(e.getMessage());
+            return apiCRUDResponseBuilder.createErrorResponse(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            return apiResponseBuilder.errorServerResponse(e.getMessage());
+            return apiCRUDResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 
@@ -89,13 +88,13 @@ public abstract class BaseCRUDController<T> {
 
             useCase.update(id, t);
             tUpdated = useCase.getById(id);
-            return apiResponseBuilder.updateSuccessResponse(tUpdated);
+            return apiCRUDResponseBuilder.updateSuccessResponse(tUpdated);
 
         } catch (DomainException e) {
-            return apiResponseBuilder.updateErrorResponse(e.getMessage());
+            return apiCRUDResponseBuilder.updateErrorResponse(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            return apiResponseBuilder.errorServerResponse(e.getMessage());
+            return apiCRUDResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 
@@ -106,11 +105,11 @@ public abstract class BaseCRUDController<T> {
             T t = useCase.getById(id);
             useCase.deleteById(id);
 
-            return apiResponseBuilder.deleteSuccessResponse(t);
+            return apiCRUDResponseBuilder.deleteSuccessResponse(t);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return apiResponseBuilder.errorServerResponse(e.getMessage());
+            return apiCRUDResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 

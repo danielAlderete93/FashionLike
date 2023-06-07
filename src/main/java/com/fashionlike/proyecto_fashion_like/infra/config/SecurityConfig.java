@@ -26,10 +26,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/public/**").permitAll() // Permitir acceso sin autenticación al endpoint de login
-                .anyRequest().authenticated(); // Requiere autenticación para cualquier otra ruta
-
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/api/public/**").permitAll()
+                .antMatchers("/api/private/**").authenticated()
+                .antMatchers("/api/private/user/new").hasRole("ADMIN")
+                .antMatchers("/api/private/user/delete").hasRole("ADMIN")
+                .and()
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

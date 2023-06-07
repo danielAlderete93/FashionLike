@@ -1,6 +1,7 @@
-package com.fashionlike.proyecto_fashion_like.app.controller;
+package com.fashionlike.proyecto_fashion_like.app.controller.tag;
 
-import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
+import com.fashionlike.proyecto_fashion_like.app.api.builder.crud.ApiCRUDResponseBuilder;
+import com.fashionlike.proyecto_fashion_like.app.controller.BaseCRUDController;
 import com.fashionlike.proyecto_fashion_like.app.usecase.tag.dto.TagDTO;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.CRUDUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TagCRUDController extends BaseCRUDController<TagDTO> {
 
     @Autowired
-    protected TagCRUDController(CRUDUseCase<TagDTO> useCase, ApiResponseBuilder<TagDTO> apiResponseBuilder) {
-        super(useCase, apiResponseBuilder);
+    protected TagCRUDController(CRUDUseCase<TagDTO> useCase, ApiCRUDResponseBuilder<TagDTO> apiCRUDResponseBuilder) {
+        super(useCase, apiCRUDResponseBuilder);
     }
 
 }

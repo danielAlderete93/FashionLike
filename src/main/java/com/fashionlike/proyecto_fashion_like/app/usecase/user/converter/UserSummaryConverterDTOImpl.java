@@ -15,7 +15,7 @@ public class UserSummaryConverterDTOImpl implements ConverterDTO<User, UserSumma
     @Override
     public UserSummaryDTO toDTO(User domain) {
         return UserSummaryDTO.builder()
-                .role(domain.getRole())
+                .role(domain.getRole().name())
                 .username(domain.getUsername())
                 .mail(domain.getMail())
                 .name(domain.getName())

@@ -1,6 +1,7 @@
-package com.fashionlike.proyecto_fashion_like.app.controller;
+package com.fashionlike.proyecto_fashion_like.app.controller.reactionType;
 
-import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
+import com.fashionlike.proyecto_fashion_like.app.api.builder.crud.ApiCRUDResponseBuilder;
+import com.fashionlike.proyecto_fashion_like.app.controller.BaseCRUDController;
 import com.fashionlike.proyecto_fashion_like.app.usecase.reactiontype.dto.ReactionTypeDTO;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.CRUDUseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReactionTypeCRUDController extends BaseCRUDController<ReactionTypeDTO> {
 
     @Autowired
-    public ReactionTypeCRUDController(CRUDUseCase<ReactionTypeDTO> useCase, ApiResponseBuilder<ReactionTypeDTO> apiResponseBuilder) {
-        super(useCase, apiResponseBuilder);
+    public ReactionTypeCRUDController(CRUDUseCase<ReactionTypeDTO> useCase, ApiCRUDResponseBuilder<ReactionTypeDTO> apiCRUDResponseBuilder) {
+        super(useCase, apiCRUDResponseBuilder);
     }
 }

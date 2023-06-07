@@ -1,6 +1,5 @@
-package com.fashionlike.proyecto_fashion_like.app.api.builder;
+package com.fashionlike.proyecto_fashion_like.app.api.builder.crud;
 
-import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
 import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.ApiResponse;
 import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.StatusResponse;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.util.List;
 
-public abstract class AbstractApiResponseBuilder<T> implements ApiResponseBuilder<T> {
+public abstract class AbstractApiCRUDResponseBuilder<T> implements ApiCRUDResponseBuilder<T> {
 
     protected abstract String getEntityName();
 
@@ -61,7 +60,7 @@ public abstract class AbstractApiResponseBuilder<T> implements ApiResponseBuilde
     @Override
     public ResponseEntity<ApiResponse<T>> updateErrorResponse(String message) {
         ApiResponse<T> apiResponse = ApiResponse.error(StatusResponse.notUpdated(getNotUpdatedMessage(message)));
-        return ResponseEntity.ok(apiResponse);
+        return ResponseEntity.badRequest().body(apiResponse);
     }
 
     @Override

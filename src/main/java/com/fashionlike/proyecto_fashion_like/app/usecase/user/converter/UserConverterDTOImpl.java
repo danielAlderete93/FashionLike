@@ -3,6 +3,7 @@ package com.fashionlike.proyecto_fashion_like.app.usecase.user.converter;
 
 import com.fashionlike.proyecto_fashion_like.app.usecase.converter.ConverterDTO;
 import com.fashionlike.proyecto_fashion_like.app.usecase.user.dto.UserDTO;
+import com.fashionlike.proyecto_fashion_like.domain.model.Role;
 import com.fashionlike.proyecto_fashion_like.domain.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ public class UserConverterDTOImpl implements ConverterDTO<User, UserDTO> {
                 .username(dto.getUsername())
                 .isActive(dto.getIsActive())
                 .mail(dto.getMail())
-                .role(dto.getRole())
+                .role(Role.valueOf(dto.getRole()))
                 .build();
 
     }
@@ -43,7 +44,7 @@ public class UserConverterDTOImpl implements ConverterDTO<User, UserDTO> {
                 .name(domain.getName())
                 .mail(domain.getMail())
                 .isActive(domain.getIsActive())
-                .role(domain.getRole())
+                .role(domain.getRole().name())
                 .build();
     }
 }

@@ -1,6 +1,6 @@
-package com.fashionlike.proyecto_fashion_like.app.controller;
+package com.fashionlike.proyecto_fashion_like.app.controller.auth;
 
-import com.fashionlike.proyecto_fashion_like.app.api.ApiResponseBuilder;
+import com.fashionlike.proyecto_fashion_like.app.api.builder.crud.ApiCRUDResponseBuilder;
 import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.LoginRequestDTO;
 import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.RegisterRequestDTO;
 import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.LoginResponseDTO;
@@ -30,7 +30,7 @@ public class AuthController {
 
     private final MailSenderUseCase mailSenderUseCase;
 
-    ApiResponseBuilder<UserDTO> apiResponseBuilder;
+    ApiCRUDResponseBuilder<UserDTO> apiCRUDResponseBuilder;
 
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -73,12 +73,12 @@ public class AuthController {
             String token = authUseCase.generateRegisterTokenForUserByID(id);
             mailSenderUseCase.sendValidationRegister(createdDTO, token);
 
-            return apiResponseBuilder.createSuccessResponse(location, createdDTO);
+            return apiCRUDResponseBuilder.createSuccessResponse(location, createdDTO);
         } catch (DomainException e) {
-            return apiResponseBuilder.createErrorResponse(e.getMessage());
+            return apiCRUDResponseBuilder.createErrorResponse(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            return apiResponseBuilder.errorServerResponse(e.getMessage());
+            return apiCRUDResponseBuilder.errorServerResponse(e.getMessage());
         }
     }
 

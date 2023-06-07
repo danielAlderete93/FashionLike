@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like.app.api;
+package com.fashionlike.proyecto_fashion_like.app.api.builder.crud;
 
 import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import java.net.URI;
 import java.util.List;
 
-public interface ApiResponseBuilder<T> {
+public interface ApiCRUDResponseBuilder<T> {
 
     ResponseEntity<ApiResponse<T>> createSuccessResponse(URI uri, T data);
 
@@ -23,8 +23,6 @@ public interface ApiResponseBuilder<T> {
     ResponseEntity<ApiResponse<T>> errorServerResponse(String message);
 
     ResponseEntity<ApiResponse<T>> notFoundSuccessResponse();
-
-
 
 
     ResponseEntity<ApiResponse<List<T>>> foundListSuccessResponse(List<T> data);

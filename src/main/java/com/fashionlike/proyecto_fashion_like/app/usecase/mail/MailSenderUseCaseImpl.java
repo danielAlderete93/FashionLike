@@ -16,10 +16,11 @@ public class MailSenderUseCaseImpl implements MailSenderUseCase {
 
     @Override
     public void sendValidationRegister(UserDTO user, String token) {
-        mailSenderService.sendEmail(user.getMail(), SUBJECT_MESSAGE, getBody(token));
+        mailSenderService.sendEmail(user.getMail(), SUBJECT_MESSAGE, template(token));
     }
 
-    private String getBody(String token) {
+    private String template(String token) {
+        /*TODO CAMBIAR POR Template engine -> Mustage*/
         return "<h1> Bienvenido a Fashion Like</h1>" +
                 "<p>Para validar tu cuenta debes hacer click en el siguiente link:</p>" +
                 "<a href='http://localhost:8080/api/public/auth/validate?token=" +

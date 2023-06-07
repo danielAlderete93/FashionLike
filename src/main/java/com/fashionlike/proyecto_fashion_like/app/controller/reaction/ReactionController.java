@@ -1,4 +1,4 @@
-package com.fashionlike.proyecto_fashion_like.app.controller;
+package com.fashionlike.proyecto_fashion_like.app.controller.reaction;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

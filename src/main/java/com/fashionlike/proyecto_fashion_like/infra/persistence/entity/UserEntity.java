@@ -27,8 +27,9 @@ public class UserEntity {
     private String mail;
     @Column
     private Boolean isActive;
-    @Enumerated
-    private Role role;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private RoleEntity role;
 
 
 }

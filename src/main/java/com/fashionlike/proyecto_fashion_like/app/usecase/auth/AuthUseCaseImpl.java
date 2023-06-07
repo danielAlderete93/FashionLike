@@ -1,8 +1,8 @@
 package com.fashionlike.proyecto_fashion_like.app.usecase.auth;
 
+import com.fashionlike.proyecto_fashion_like.app.provider.JwtTokenProvider;
 import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.LoginRequestDTO;
 import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.RegisterRequestDTO;
-import com.fashionlike.proyecto_fashion_like.app.provider.JwtTokenProvider;
 import com.fashionlike.proyecto_fashion_like.app.util.PasswordEncryptionUtil;
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.InvalidCredentialsException;
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.InvalidRegisterException;
