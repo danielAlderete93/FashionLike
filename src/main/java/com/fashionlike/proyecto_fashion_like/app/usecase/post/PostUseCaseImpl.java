@@ -1,8 +1,10 @@
 package com.fashionlike.proyecto_fashion_like.app.usecase.post;
 
+import com.fashionlike.proyecto_fashion_like.app.usecase.post.dto.PostDTO;
 import com.fashionlike.proyecto_fashion_like.app.usecase.post.dto.PostInfoDTO;
 import com.fashionlike.proyecto_fashion_like.domain.model.Post;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.PostService;
+import com.fashionlike.proyecto_fashion_like.domain.usecase.CRUDUseCase;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.PostUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,9 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostUseCaseImpl implements PostUseCase {
     private PostService postService;
+    private CRUDUseCase<PostDTO> postDTOCRUDUseCase;
 
     @Override
-    public PostInfoDTO deactive(Integer idPost) {
+    public PostInfoDTO deactivate(Integer idPost) {
         Post post = postService.getById(idPost);
         PostInfoDTO infoDTO;
 
@@ -26,6 +29,7 @@ public class PostUseCaseImpl implements PostUseCase {
 
         infoDTO = PostInfoDTO.builder()
                 .id(idPost)
+                .title(post.getTitle())
                 .isActive(false)
                 .build();
 
@@ -33,7 +37,7 @@ public class PostUseCaseImpl implements PostUseCase {
     }
 
     @Override
-    public PostInfoDTO active(Integer idPost) {
+    public PostInfoDTO activate(Integer idPost) {
         Post post = postService.getById(idPost);
         PostInfoDTO infoDTO;
         if (post == null) {
@@ -45,9 +49,22 @@ public class PostUseCaseImpl implements PostUseCase {
 
         infoDTO = PostInfoDTO.builder()
                 .id(idPost)
+                .title(post.getTitle())
                 .isActive(true)
                 .build();
 
         return infoDTO;
     }
+
+    @Override
+    public PostDTO addView(Integer idPost) {
+        Post post = postService.getById(idPost);
+        if (post != null) {
+            post.addView();
+            return postDTOCRUDUseCase.getById(idPost);
+        }
+
+        return null;
+    }
+
 }

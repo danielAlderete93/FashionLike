@@ -7,5 +7,6 @@ import lombok.Data;
 @Builder
 public class PostInfoDTO {
     private Integer id;
+    private String title;
     private Boolean isActive;
 }

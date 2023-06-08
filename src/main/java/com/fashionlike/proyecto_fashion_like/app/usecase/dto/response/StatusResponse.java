@@ -3,6 +3,7 @@ package com.fashionlike.proyecto_fashion_like.app.usecase.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Data
 @AllArgsConstructor
@@ -13,40 +14,47 @@ public class StatusResponse {
     private int code;
 
     public static StatusResponse errorServer(String message) {
-        return new StatusResponse("Error: Internal Server", message, 500);
+        return createStatusResponse(StatusResponseTitle.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
 
     public static StatusResponse notFound(String message) {
-        return new StatusResponse("Error: Not found", message, 404);
+        return createStatusResponse(StatusResponseTitle.NOT_FOUND, HttpStatus.NOT_FOUND, message);
+
     }
 
     public static StatusResponse notCreated(String message) {
-        return new StatusResponse("Error: Not created", message, 400);
+        return createStatusResponse(StatusResponseTitle.NOT_CREATED, HttpStatus.BAD_REQUEST, message);
     }
 
     public static StatusResponse created(String message) {
-        return new StatusResponse("Success: Created", message, 201);
+        return createStatusResponse(StatusResponseTitle.CREATED, HttpStatus.CREATED, message);
     }
 
     public static StatusResponse updated(String message) {
-        return new StatusResponse("Success: Updated", message, 200);
+        return createStatusResponse(StatusResponseTitle.UPDATED, HttpStatus.OK, message);
     }
 
     public static StatusResponse notUpdated(String message) {
-        return new StatusResponse("Error: Not updated", message, 400);
+        return createStatusResponse(StatusResponseTitle.NOT_UPDATED, HttpStatus.BAD_REQUEST, message);
     }
 
     public static StatusResponse deleted(String message) {
-        return new StatusResponse("Success: Delete", message, 200);
+        return createStatusResponse(StatusResponseTitle.DELETED, HttpStatus.OK, message);
     }
 
     public static StatusResponse found(String message) {
-        return new StatusResponse("Success", message, 200);
+        return createStatusResponse(StatusResponseTitle.FOUND, HttpStatus.FOUND, message);
     }
 
     public static StatusResponse errorUnauthorized(String message) {
-        return new StatusResponse("Error: Unauthorized", message, 401);
+        return createStatusResponse(StatusResponseTitle.UNAUTHORIZED, HttpStatus.UNAUTHORIZED, message);
     }
 
 
+    private static StatusResponse createStatusResponse(StatusResponseTitle title, HttpStatus httpStatus, String message) {
+        String titleMessage = title.getMessage();
+        int code = httpStatus.value();
+
+        return new StatusResponse(titleMessage, message, code);
+    }
 }

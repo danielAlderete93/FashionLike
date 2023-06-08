@@ -1,12 +1,11 @@
 package com.fashionlike.proyecto_fashion_like.app.controller.auth;
 
-import com.fashionlike.proyecto_fashion_like.app.api.builder.crud.ApiCRUDResponseBuilder;
 import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.LoginRequestDTO;
-import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.RegisterRequestDTO;
 import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.LoginResponseDTO;
-import com.fashionlike.proyecto_fashion_like.app.usecase.user.dto.UserDTO;
+import com.fashionlike.proyecto_fashion_like.app.usecase.auth.dto.RegisterRequestDTO;
 import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.ApiResponse;
 import com.fashionlike.proyecto_fashion_like.app.usecase.dto.response.StatusResponse;
+import com.fashionlike.proyecto_fashion_like.app.usecase.user.dto.UserDTO;
 import com.fashionlike.proyecto_fashion_like.domain.exceptions.DomainException;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.AuthUseCase;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.CRUDUseCase;
@@ -30,8 +29,6 @@ public class AuthController {
 
     private final MailSenderUseCase mailSenderUseCase;
 
-    ApiCRUDResponseBuilder<UserDTO> apiCRUDResponseBuilder;
-
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -47,10 +44,6 @@ public class AuthController {
         } catch (DomainException e) {
             ApiResponse<LoginResponseDTO> response = new ApiResponse<>(null, StatusResponse.errorUnauthorized(e.getMessage()));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ApiResponse<LoginResponseDTO> response = new ApiResponse<>(null, StatusResponse.errorServer(e.getMessage()));
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
     }
 
@@ -61,6 +54,7 @@ public class AuthController {
         // Lógica para autenticar al usuario y generar el token JWT
         UserDTO createdDTO;
         URI location;
+        ApiResponse<UserDTO> apiResponse;
 
         try {
             Integer id = authUseCase.register(registerRequestDTO);
@@ -73,12 +67,11 @@ public class AuthController {
             String token = authUseCase.generateRegisterTokenForUserByID(id);
             mailSenderUseCase.sendValidationRegister(createdDTO, token);
 
-            return apiCRUDResponseBuilder.createSuccessResponse(location, createdDTO);
+            apiResponse = ApiResponse.success(createdDTO, StatusResponse.created("Success created"));
+            return ResponseEntity.created(location).body(apiResponse);
         } catch (DomainException e) {
-            return apiCRUDResponseBuilder.createErrorResponse(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return apiCRUDResponseBuilder.errorServerResponse(e.getMessage());
+            apiResponse = ApiResponse.error(StatusResponse.notCreated(e.getMessage()));
+            return ResponseEntity.badRequest().body(apiResponse);
         }
     }
 
@@ -101,9 +94,6 @@ public class AuthController {
         } catch (DomainException e) {
             apiResponse = ApiResponse.error(StatusResponse.errorUnauthorized(e.getMessage()));
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
-        } catch (Exception e) {
-            apiResponse = ApiResponse.error(StatusResponse.errorServer(e.getMessage()));
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
         }
     }
 

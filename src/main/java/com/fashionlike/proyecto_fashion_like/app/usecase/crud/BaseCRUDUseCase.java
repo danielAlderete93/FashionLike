@@ -4,6 +4,7 @@ import com.fashionlike.proyecto_fashion_like.app.usecase.converter.ConverterDTO;
 import com.fashionlike.proyecto_fashion_like.domain.port.service.CRUDBaseService;
 import com.fashionlike.proyecto_fashion_like.domain.usecase.CRUDUseCase;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,9 @@ public abstract class BaseCRUDUseCase<D, T> implements CRUDUseCase<T> {
     @Override
     public List<T> getAll() {
         List<D> posts = service.getAll();
+        if (posts == null) {
+            return new ArrayList<>();
+        }
         return posts.stream()
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
@@ -51,7 +55,6 @@ public abstract class BaseCRUDUseCase<D, T> implements CRUDUseCase<T> {
     public Boolean deleteById(Integer id) {
         return service.deleteById(id);
     }
-
 
 
 }

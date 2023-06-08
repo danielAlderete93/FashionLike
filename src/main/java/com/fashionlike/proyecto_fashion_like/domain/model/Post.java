@@ -23,4 +23,8 @@ public class Post {
     private List<Tag> tags;
 
 
+    public void addView() {
+        this.views++;
+    }
+
 }
